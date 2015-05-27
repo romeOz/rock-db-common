@@ -2,7 +2,7 @@
 
 namespace rock\db\common;
 
-trait CacheTrait
+trait CommonCacheTrait
 {
     protected $cacheExpire;
     protected $cacheTags;
