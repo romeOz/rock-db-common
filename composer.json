@@ -1,0 +1,31 @@
+{
+    "name": "romeoz/rock-db-common",
+    "description": "Common Library for Rock DB and Rock MongoDB.",
+    "keywords": ["common", "database"],
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/romeOz/rock-db-common/issues",
+        "source": "https://github.com/romeOz/rock-db-common"
+    },
+    "authors": [
+        {
+            "name": "Ruslan",
+            "email": "serggalka@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "romeoz/rock-components" : "0.10.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "rock\\db\\common\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.10-dev"
+        }
+    }
+}

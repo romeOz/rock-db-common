@@ -1,0 +1,31 @@
+############
+## Project
+############
+
+/build/
+/vendor
+composer.lock
+*~
+
+
+############
+## Windows
+############
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+
+############
+## Vagrant
+############
+.vagrant/*
+
+
+############
+## PHPStorm
+############
+.idea/*
