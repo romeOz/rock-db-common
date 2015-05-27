@@ -49,7 +49,7 @@ trait QueryTrait
      * @param Connection|\rock\sphinx\Connection $connection DB/Sphinx connection instance
      * @return static the query object itself
      */
-    public function setConnection(Connection $connection)
+    public function setConnection($connection)
     {
         /** @var self|Query $this */
         $this->connection = $this->calculateCacheParams($connection);
@@ -63,7 +63,7 @@ trait QueryTrait
     {
         /** @var self|Query $this */
 
-        $this->connection = Instance::ensure($this->connection, Connection::className());
+        $this->connection = Instance::ensure($this->connection);
         return $this->calculateCacheParams($this->connection);
     }
 
