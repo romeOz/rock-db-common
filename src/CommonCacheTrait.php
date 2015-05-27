@@ -38,10 +38,10 @@ trait CommonCacheTrait
     }
 
     /**
-     * @param Connection|\rock\mongodb\Connection $connection
+     * @param ConnectionInterface $connection
      * @return mixed
      */
-    protected function calculateCacheParams($connection)
+    protected function calculateCacheParams(ConnectionInterface $connection)
     {
         if (isset($this->enableCache)) {
             $connection->enableQueryCache = $this->enableCache;

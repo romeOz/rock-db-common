@@ -2,9 +2,6 @@
 namespace rock\db\common;
 
 use rock\di\Container;
-use rock\helpers\ArrayHelper;
-use rock\helpers\Helper;
-use rock\helpers\Instance;
 
 /**
  * The BaseQuery trait represents the minimum method set of a database Query.
@@ -44,28 +41,6 @@ trait QueryTrait
      */
     public $indexBy;
 
-
-    /**
-     * @param Connection|\rock\sphinx\Connection $connection DB/Sphinx connection instance
-     * @return static the query object itself
-     */
-    public function setConnection($connection)
-    {
-        /** @var self|Query $this */
-        $this->connection = $this->calculateCacheParams($connection);
-        return $this;
-    }
-
-    /**
-     * @return Connection|\rock\sphinx\Connection DB\Sphinx connection instance
-     */
-    public function getConnection()
-    {
-        /** @var self|Query $this */
-
-        $this->connection = Instance::ensure($this->connection);
-        return $this->calculateCacheParams($this->connection);
-    }
 
     /**
      * Sets the {@see \rock\db\QueryInterface::$indexBy} property.
@@ -389,24 +364,6 @@ trait QueryTrait
     {
         $this->offset = $offset;
         return $this;
-    }
-
-    /**
-     * @param array      $rows
-     * @param Connection $connection
-     * @return array
-     */
-    public function typeCast($rows, Connection $connection = null)
-    {
-        if ($connection instanceof Connection) {
-            $this->setConnection($connection);
-        }
-        $connection = $this->getConnection();
-        if ($connection->typeCast) {
-            $rows = is_array($rows) ? ArrayHelper::toType($rows) : Helper::toType($rows);
-        }
-
-        return $rows;
     }
 
     protected function removeAliasEntity($entity)
