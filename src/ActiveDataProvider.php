@@ -54,10 +54,10 @@ class ActiveDataProvider implements ObjectInterface
 
     /**
      * Source. Can be array or Model.
-     * @var Query
+     * @var QueryInterface
      */
     public $query;
-    /** @var  \rock\db\Connection|\rock\mongodb\Connection */
+    /** @var  ConnectionInterface */
     public $connection;
     /**
      * List data pagination.
@@ -262,7 +262,7 @@ class ActiveDataProvider implements ObjectInterface
     }
 
     /**
-     * @return ActiveRecord
+     * @return ActiveRecordInterface
      */
     protected function prepareModels()
     {
@@ -326,7 +326,7 @@ class ActiveDataProvider implements ObjectInterface
 
             return $keys;
         } elseif ($this->query instanceof ActiveQueryInterface) {
-            /* @var $class \rock\db\ActiveRecord */
+            /* @var $class ActiveRecordInterface */
             $class = $this->query->modelClass;
             $pks = $class::primaryKey();
             if (count($pks) === 1) {
