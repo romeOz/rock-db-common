@@ -6,7 +6,7 @@ use rock\di\Container;
 /**
  * The BaseQuery trait represents the minimum method set of a database Query.
  *
- * It is supposed to be used in a class that implements the {@see \rock\db\QueryInterface}.
+ * It is supposed to be used in a class that implements the {@see \rock\db\common\QueryInterface}.
  */
 trait QueryTrait
 {
@@ -37,13 +37,13 @@ trait QueryTrait
     /**
      * @var string|callable $column the name of the column by which the query results should be indexed by.
      * This can also be a callable (e.g. anonymous function) that returns the index value based on the given
-     * row data. For more details, see {@see \rock\db\QueryInterface::indexBy()}. This property is only used by {@see \rock\db\QueryInterface::all()}.
+     * row data. For more details, see {@see \rock\db\common\QueryInterface::indexBy()}. This property is only used by {@see \rock\db\common\QueryInterface::all()}.
      */
     public $indexBy;
 
 
     /**
-     * Sets the {@see \rock\db\QueryInterface::$indexBy} property.
+     * Sets the {@see \rock\db\common\QueryInterface::$indexBy} property.
      * @param string|callable $column the name of the column by which the query results should be indexed by.
      * This can also be a callable (e.g. anonymous function) that returns the index value based on the given
      * row data. The signature of the callable should be:
@@ -66,7 +66,7 @@ trait QueryTrait
     /**
      * Sets the WHERE part of the query.
      *
-     * See {@see \rock\db\QueryInterface::where()} for detailed documentation.
+     * See {@see \rock\db\common\QueryInterface::where()} for detailed documentation.
      *
      * @param string|array $condition the conditions that should be put in the WHERE part.
      * @return static the query object itself.
@@ -82,7 +82,7 @@ trait QueryTrait
     /**
      * Adds an additional WHERE condition to the existing one.
      * The new condition and the existing one will be joined using the 'AND' operator.
-     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself.
      * @see where()
@@ -101,7 +101,7 @@ trait QueryTrait
     /**
      * Adds an additional WHERE condition to the existing one.
      * The new condition and the existing one will be joined using the 'OR' operator.
-     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself.
      * @see where()
@@ -120,11 +120,11 @@ trait QueryTrait
     /**
      * Sets the WHERE part of the query but ignores {@see \rock\db\QueryTrait::isEmpty()}(empty operands)].
      *
-     * This method is similar to {@see \rock\db\QueryInterface::where()}. The main difference is that this method will
+     * This method is similar to {@see \rock\db\common\QueryInterface::where()}. The main difference is that this method will
      * remove {@see \rock\db\QueryTrait::isEmpty()}(empty query operands). As a result, this method is best suited
      * for building query conditions based on filter values entered by users.
      *
-     * The following code shows the difference between this method and {@see \rock\db\QueryInterface::where()}:
+     * The following code shows the difference between this method and {@see \rock\db\common\QueryInterface::where()}:
      *
      * ```php
      * // WHERE `age`=:age
@@ -135,10 +135,10 @@ trait QueryTrait
      * $query->where(['name' => null, 'age' => 20]);
      * ```
      *
-     * Note that unlike {@see \rock\db\QueryInterface::where()}, you cannot pass binding parameters to this method.
+     * Note that unlike {@see \rock\db\common\QueryInterface::where()}, you cannot pass binding parameters to this method.
      *
      * @param array $condition the conditions that should be put in the WHERE part.
-     * See {@see \rock\db\QueryInterface::where()} on how to specify this parameter.
+     * See {@see \rock\db\common\QueryInterface::where()} on how to specify this parameter.
      * @return static the query object itself.
      * @see where()
      * @see andFilterWhere()
@@ -157,11 +157,11 @@ trait QueryTrait
      * Adds an additional WHERE condition to the existing one but ignores {@see \rock\db\QueryTrait::isEmpty()}(empty operands)].
      * The new condition and the existing one will be joined using the 'AND' operator.
      *
-     * This method is similar to {@see \rock\db\QueryInterface::andWhere()}. The main difference is that this method will
+     * This method is similar to {@see \rock\db\common\QueryInterface::andWhere()}. The main difference is that this method will
      * remove {@see \rock\db\QueryTrait::isEmpty()}(empty query operands). As a result, this method is best suited
      * for building query conditions based on filter values entered by users.
      *
-     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself.
      * @see filterWhere()
@@ -180,11 +180,11 @@ trait QueryTrait
      * Adds an additional WHERE condition to the existing one but ignores {@see \rock\db\QueryTrait::isEmpty()}(empty operands)].
      * The new condition and the existing one will be joined using the 'OR' operator.
      *
-     * This method is similar to {@see \rock\db\QueryInterface::orWhere()}. The main difference is that this method will
+     * This method is similar to {@see \rock\db\common\QueryInterface::orWhere()}. The main difference is that this method will
      * remove {@see \rock\db\QueryTrait::isEmpty()}(empty query operands). As a result, this method is best suited
      * for building query conditions based on filter values entered by users.
      *
-     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself.
      * @see filterWhere()

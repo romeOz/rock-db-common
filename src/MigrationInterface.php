@@ -4,8 +4,8 @@ namespace rock\db\common;
 /**
  * The MigrationInterface defines the minimum set of methods to be implemented by a database migration.
  *
- * Each migration class should provide the {@see \rock\db\MigrationInterface::up()} method containing the logic for "upgrading" the database
- * and the {@see \rock\db\MigrationInterface::down()} method for the "downgrading" logic.
+ * Each migration class should provide the {@see \rock\db\common\MigrationInterface::up()} method containing the logic for "upgrading" the database
+ * and the {@see \rock\db\common\MigrationInterface::down()} method for the "downgrading" logic.
  */
 interface MigrationInterface
 {

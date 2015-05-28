@@ -10,7 +10,7 @@ use rock\helpers\ArrayHelper;
 /**
  * ActiveDataProvider implements a data provider based on {@see \rock\db\Query} and {@see \rock\db\ActiveQuery}.
  *
- * ActiveDataProvider provides data by performing DB queries using {@see \rock\db\ActiveDataProvider::$query }.
+ * ActiveDataProvider provides data by performing DB queries using {@see \rock\db\common\ActiveDataProvider::$query }.
  *
  * The following is an example of using ActiveDataProvider to provide ActiveRecord instances:
  *
@@ -26,7 +26,7 @@ use rock\helpers\ArrayHelper;
  * ]);
  *
  * $provider->get(); // returns list items in the current page
- * $provider->getPagination(); // returns \rock\db\ActiveDataPagination
+ * $provider->getPagination(); // returns \rock\db\common\ActiveDataPagination
  * ```
  *
  * And the following example shows how to use ActiveDataProvider without ActiveRecord:
@@ -44,7 +44,7 @@ use rock\helpers\ArrayHelper;
  * ]);
  *
  * $provider->get(); // returns list items in the current page
- * $provider->getPagination(); // returns \rock\db\ActiveDataPagination
+ * $provider->getPagination(); // returns \rock\db\common\ActiveDataPagination
  * ```
  *
  */
@@ -78,7 +78,7 @@ class ActiveDataProvider implements ObjectInterface
      *
      * If this is not set, the following rules will be used to determine the keys of the data models:
      *
-     * - If {@see \rock\db\ActiveDataProvider::$query} is an {@see \rock\db\ActiveQuery} instance, the primary keys of {@see \rock\db\ActiveQuery::$modelClass} will be used.
+     * - If {@see \rock\db\common\ActiveDataProvider::$query} is an {@see \rock\db\ActiveQuery} instance, the primary keys of {@see \rock\db\ActiveQuery::$modelClass} will be used.
      *
      * @see getKeys()
      */

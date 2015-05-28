@@ -8,9 +8,9 @@ use rock\components\ComponentsInterface;
  *
  * The default implementation of this interface is provided by {@see \rock\db\QueryTrait}.
  *
- * It has support for getting {@see \rock\db\QueryInterface::one()} instance or {@see \rock\db\QueryInterface::all()}.
- * Allows pagination via {@see \rock\db\QueryInterface::limit()} and {@see \rock\db\QueryInterface::offset()}.
- * Sorting is supported via {@see \rock\db\QueryInterface::orderBy()} and items can be limited to match some conditions using {@see \rock\db\QueryInterface::where()}.
+ * It has support for getting {@see \rock\db\common\QueryInterface::one()} instance or {@see \rock\db\common\QueryInterface::all()}.
+ * Allows pagination via {@see \rock\db\common\QueryInterface::limit()} and {@see \rock\db\common\QueryInterface::offset()}.
+ * Sorting is supported via {@see \rock\db\common\QueryInterface::orderBy()} and items can be limited to match some conditions using {@see \rock\db\common\QueryInterface::where()}.
  */
 interface QueryInterface extends ComponentsInterface
 {
@@ -160,7 +160,7 @@ interface QueryInterface extends ComponentsInterface
      * Adds an additional WHERE condition to the existing one.
      * 
      * The new condition and the existing one will be joined using the 'AND' operator.
-     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself
      * @see where()
@@ -172,7 +172,7 @@ interface QueryInterface extends ComponentsInterface
      * Adds an additional WHERE condition to the existing one.
      * 
      * The new condition and the existing one will be joined using the 'OR' operator.
-     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself
      * @see where()
@@ -183,7 +183,7 @@ interface QueryInterface extends ComponentsInterface
     /**
      * Sets the WHERE part of the query ignoring empty parameters.
      *
-     * @param array $condition the conditions that should be put in the WHERE part. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param array $condition the conditions that should be put in the WHERE part. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself
      * @see andFilterWhere()
@@ -195,7 +195,7 @@ interface QueryInterface extends ComponentsInterface
      * Adds an additional WHERE condition to the existing one ignoring empty parameters.
      * 
      * The new condition and the existing one will be joined using the 'AND' operator.
-     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself
      * @see filterWhere()
@@ -206,7 +206,7 @@ interface QueryInterface extends ComponentsInterface
     /**
      * Adds an additional WHERE condition to the existing one ignoring empty parameters.
      * The new condition and the existing one will be joined using the 'OR' operator.
-     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\QueryInterface::where()}
+     * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
      * @return static the query object itself
      * @see filterWhere()

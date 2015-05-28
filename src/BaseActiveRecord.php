@@ -102,7 +102,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * This method is internally called by {@see BaseActiveRecord::findOne()} and {@see BaseActiveRecord::findAll()}.
      *
      * @param mixed $condition please refer to {@see BaseActiveRecord::findOne()} for the explanation of this parameter
-     * @return ActiveQueryInterface the newly created {@see \rock\db\ActiveQueryInterface} instance.
+     * @return ActiveQueryInterface the newly created {@see \rock\db\common\ActiveQueryInterface} instance.
      * @throws DbException if there is no primary key defined
      * @internal
      */
@@ -191,7 +191,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * (because another user has modified the data), a {@see \rock\db\Exception} exception will be thrown,
      * and the update or deletion is skipped.
      *
-     * Optimistic locking is only supported by {@see \rock\db\BaseActiveRecord::update()} and {@see BaseActiveRecord::delete()}.
+     * Optimistic locking is only supported by {@see \rock\db\common\BaseActiveRecord::update()} and {@see BaseActiveRecord::delete()}.
      *
      * To use Optimistic locking:
      *
@@ -502,7 +502,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * Marks an attribute dirty.
-     * This method may be called to force updating a record when calling {@see \rock\db\BaseActiveRecord::update()},
+     * This method may be called to force updating a record when calling {@see \rock\db\common\BaseActiveRecord::update()},
      * even if there is no change being made to the record.
      * @param string $name the attribute name
      */
@@ -528,7 +528,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * Returns the attribute values that have been modified since they are loaded or saved most recently.
      * @param string[]|null $names the names of the attributes whose values may be returned if they are
-     * changed recently. If null, {@see \rock\db\BaseActiveRecord::getAttributes()} will be used.
+     * changed recently. If null, {@see \rock\db\common\BaseActiveRecord::getAttributes()} will be used.
      * @return array the changed attribute values (name-value pairs)
      */
     public function getDirtyAttributes(array $names = null)
@@ -557,7 +557,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * Saves the current record.
      *
-     * This method will call {@see \rock\db\ActiveRecordInterface::insert()} when {@see BaseActiveRecord::$isNewRecord} is true, or {@see \rock\db\BaseActiveRecord::update()}
+     * This method will call {@see \rock\db\common\ActiveRecordInterface::insert()} when {@see BaseActiveRecord::$isNewRecord} is true, or {@see \rock\db\common\BaseActiveRecord::update()}
      * when {@see BaseActiveRecord::$isNewRecord} is false.
      *
      * For example, to save a customer record:
@@ -593,16 +593,16 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * 1. call {@see \rock\components\Model::beforeValidate()} when `$runValidation` is true. If validation
      *    fails, it will skip the rest of the steps;
      * 2. call {@see \rock\components\Model::afterValidate()} when `$runValidation` is true.
-     * 3. call {@see \rock\db\BaseActiveRecord::beforeSave()}. If the method returns false, it will skip the
+     * 3. call {@see \rock\db\common\BaseActiveRecord::beforeSave()}. If the method returns false, it will skip the
      *    rest of the steps;
      * 4. save the record into database. If this fails, it will skip the rest of the steps;
-     * 5. call {@see \rock\db\BaseActiveRecord::afterSave()};
+     * 5. call {@see \rock\db\common\BaseActiveRecord::afterSave()};
      *
-     * In the above step 1, 2, 3 and 5, events {@see \rock\components\Model::EVENT_BEFORE_VALIDATE}, {@see \rock\db\BaseActiveRecord::EVENT_BEFORE_UPDATE},
-     * {@see \rock\db\BaseActiveRecord::EVENT_AFTER_UPDATE} and {@see \rock\components\Model::EVENT_AFTER_VALIDATE}
+     * In the above step 1, 2, 3 and 5, events {@see \rock\components\Model::EVENT_BEFORE_VALIDATE}, {@see \rock\db\common\BaseActiveRecord::EVENT_BEFORE_UPDATE},
+     * {@see \rock\db\common\BaseActiveRecord::EVENT_AFTER_UPDATE} and {@see \rock\components\Model::EVENT_AFTER_VALIDATE}
      * will be raised by the corresponding methods.
      *
-     * Only the {@see \rock\db\BaseActiveRecord::$dirtyAttributes}(changed attribute values) will be saved into database.
+     * Only the {@see \rock\db\common\BaseActiveRecord::$dirtyAttributes}(changed attribute values) will be saved into database.
      *
      * For example, to update a customer record:
      *
@@ -630,8 +630,8 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @param array $attributeNames list of attribute names that need to be saved. Defaults to null,
      * meaning all attributes that are loaded from DB will be saved.
      * @return integer|boolean the number of rows affected, or false if validation fails
-     * or {@see \rock\db\BaseActiveRecord::beforeSave()} stops the updating process.
-     * @throws DbException if {@see \rock\db\BaseActiveRecord::optimisticLock()} optimistic locking is enabled and the data
+     * or {@see \rock\db\common\BaseActiveRecord::beforeSave()} stops the updating process.
+     * @throws DbException if {@see \rock\db\common\BaseActiveRecord::optimisticLock()} optimistic locking is enabled and the data
      * being updated is outdated.
      * @throws DbException in case update failed.
      */
@@ -646,7 +646,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * Updates the specified attributes.
      *
-     * This method is a shortcut to {@see \rock\db\BaseActiveRecord::update()} when data validation is not needed
+     * This method is a shortcut to {@see \rock\db\common\BaseActiveRecord::update()} when data validation is not needed
      * and only a small set attributes need to be updated.
      *
      * You may specify the attributes to be updated as name list or name-value pairs.
@@ -728,7 +728,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * Updates one or several counter columns for the current AR object.
-     * Note that this method differs from {@see \rock\db\BaseActiveRecord::updateAllCounters()} in that it only
+     * Note that this method differs from {@see \rock\db\common\BaseActiveRecord::updateAllCounters()} in that it only
      * saves counters for the current AR object.
      *
      * An example usage is as follows:
@@ -761,17 +761,17 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      *
      * This method performs the following steps in order:
      *
-     * 1. call {@see \rock\db\BaseActiveRecord::beforeDelete()}. If the method returns false, it will skip the
+     * 1. call {@see \rock\db\common\BaseActiveRecord::beforeDelete()}. If the method returns false, it will skip the
      *    rest of the steps;
      * 2. delete the record from the database;
-     * 3. call {@see \rock\db\BaseActiveRecord::afterDelete()}.
+     * 3. call {@see \rock\db\common\BaseActiveRecord::afterDelete()}.
      *
-     * In the above step 1 and 3, events named {@see \rock\db\BaseActiveRecord::EVENT_BEFORE_DELETE} and {@see \rock\db\BaseActiveRecord::EVENT_AFTER_DELETE}
+     * In the above step 1 and 3, events named {@see \rock\db\common\BaseActiveRecord::EVENT_BEFORE_DELETE} and {@see \rock\db\common\BaseActiveRecord::EVENT_AFTER_DELETE}
      * will be raised by the corresponding methods.
      *
      * @return integer|boolean the number of rows deleted, or false if the deletion is unsuccessful for some reason.
      * Note that it is possible the number of rows deleted is 0, even though the deletion execution is successful.
-     * @throws DbException if {@see \rock\db\BaseActiveRecord::optimisticLock()} optimistic locking is enabled and the data
+     * @throws DbException if {@see \rock\db\common\BaseActiveRecord::optimisticLock()} optimistic locking is enabled and the data
      * being deleted is outdated.
      */
     public function delete()
@@ -799,7 +799,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * Returns a value indicating whether the current record is new.
      *
-     * @return boolean whether the record is new and should be inserted when calling {@see \rock\db\BaseActiveRecord::save()}.
+     * @return boolean whether the record is new and should be inserted when calling {@see \rock\db\common\BaseActiveRecord::save()}.
      */
     public function getIsNewRecord()
     {
@@ -809,7 +809,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * Sets the value indicating whether the record is new.
      *
-     * @param boolean $value whether the record is new and should be inserted when calling {@see \rock\db\BaseActiveRecord::save()}.
+     * @param boolean $value whether the record is new and should be inserted when calling {@see \rock\db\common\BaseActiveRecord::save()}.
      * @see getIsNewRecord()
      */
     public function setIsNewRecord($value)
@@ -821,7 +821,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * Initializes the object.
      *
      * This method is called at the end of the constructor.
-     * The default implementation will trigger an {@see \rock\db\BaseActiveRecord::EVENT_INIT} event.
+     * The default implementation will trigger an {@see \rock\db\common\BaseActiveRecord::EVENT_INIT} event.
      * If you override this method, make sure you call the parent implementation at the end
      * to ensure triggering of the event.
      */
@@ -834,7 +834,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * This method is called when the AR object is created and populated with the query result.
      *
-     * The default implementation will trigger an {@see \rock\db\BaseActiveRecord::EVENT_BEFORE_FIND} event.
+     * The default implementation will trigger an {@see \rock\db\common\BaseActiveRecord::EVENT_BEFORE_FIND} event.
      * When overriding this method, make sure you call the parent implementation to ensure the
      * event is triggered.
      */
@@ -848,7 +848,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * This method is called when the AR object is created and populated with the query result.
      *
-     * The default implementation will trigger an {@see \rock\db\BaseActiveRecord::EVENT_AFTER_FIND} event.
+     * The default implementation will trigger an {@see \rock\db\common\BaseActiveRecord::EVENT_AFTER_FIND} event.
      * When overriding this method, make sure you call the parent implementation to ensure the
      * event is triggered.
      *
@@ -896,8 +896,8 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * This method is called at the end of inserting or updating a record.
      *
-     * The default implementation will trigger an {@see \rock\db\BaseActiveRecord::EVENT_AFTER_INSERT} event when `$insert` is true,
-     * or an {@see \rock\db\BaseActiveRecord::EVENT_AFTER_UPDATE} event if `$insert` is false. The event class used is {@see \rock\db\AfterSaveEvent}.
+     * The default implementation will trigger an {@see \rock\db\common\BaseActiveRecord::EVENT_AFTER_INSERT} event when `$insert` is true,
+     * or an {@see \rock\db\common\BaseActiveRecord::EVENT_AFTER_UPDATE} event if `$insert` is false. The event class used is {@see \rock\db\AfterSaveEvent}.
      * When overriding this method, make sure you call the parent implementation so that
      * the event is triggered.
      * @param boolean $insert whether this method called while inserting a record.
@@ -919,7 +919,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * This method is invoked before deleting a record.
      *
-     * The default implementation raises the {@see \rock\db\BaseActiveRecord::EVENT_BEFORE_DELETE} event.
+     * The default implementation raises the {@see \rock\db\common\BaseActiveRecord::EVENT_BEFORE_DELETE} event.
      * When overriding this method, make sure you call the parent implementation like the following:
      *
      * ```php
@@ -947,7 +947,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * This method is invoked after deleting a record.
      *
-     * The default implementation raises the {@see \rock\db\BaseActiveRecord::EVENT_AFTER_DELETE} event.
+     * The default implementation raises the {@see \rock\db\common\BaseActiveRecord::EVENT_AFTER_DELETE} event.
      * You may override this method to do postprocessing after the record is deleted.
      * Make sure you call the parent implementation so that the event is raised properly.
      */
@@ -980,7 +980,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * Returns a value indicating whether the given active record is the same as the current one.
      * The comparison is made by comparing the table names and the primary key values of the two active records.
-     * If one of the records {@see \rock\db\BaseActiveRecord::$isNewRecord} they are also considered not equal.
+     * If one of the records {@see \rock\db\common\BaseActiveRecord::$isNewRecord} they are also considered not equal.
      * @param ActiveRecordInterface $record record to compare to
      * @return boolean whether the two active records refer to the same row in the same database table.
      */
@@ -1064,11 +1064,11 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * fetching data from the database. It is mainly used by {@see \rock\db\ActiveQuery} to populate
      * the query results into active records.
      *
-     * When calling this method manually you should call {@see \rock\db\BaseActiveRecord::afterFind()} on the created
-     * record to trigger the {@see \rock\db\BaseActiveRecord::EVENT_AFTER_FIND}.
+     * When calling this method manually you should call {@see \rock\db\common\BaseActiveRecord::afterFind()} on the created
+     * record to trigger the {@see \rock\db\common\BaseActiveRecord::EVENT_AFTER_FIND}.
      *
      * @param BaseActiveRecord $record the record to be populated. In most cases this will be an instance
-     * created by {@see \rock\db\BaseActiveRecord::instantiate()} beforehand.
+     * created by {@see \rock\db\common\BaseActiveRecord::instantiate()} beforehand.
      * @param array $row attribute values (name => value)
      */
     public static function populateRecord($record, $row)
@@ -1096,7 +1096,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     /**
      * Creates an active record instance.
      *
-     * This method is called together with {@see \rock\db\BaseActiveRecord::populateRecord()} by {@see \rock\db\ActiveQuery}.
+     * This method is called together with {@see \rock\db\common\BaseActiveRecord::populateRecord()} by {@see \rock\db\ActiveQuery}.
      * It is not meant to be used for creating new records directly.
      *
      * You may override this method if the instance being created
@@ -1124,7 +1124,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * Returns the relation object with the specified name.
-     * A relation is defined by a getter method which returns an {@see \rock\db\ActiveQueryInterface} object.
+     * A relation is defined by a getter method which returns an {@see \rock\db\common\ActiveQueryInterface} object.
      * It can be declared in either the Active Record class itself or one of its behaviors.
      *
      * @param string $name the relation name

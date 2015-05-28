@@ -11,7 +11,7 @@ interface ActiveRecordInterface
      *
      * Note that an array should be returned even when the record only has a single primary key.
      *
-     * For the primary key **value** see {@see \rock\db\ActiveRecordInterface::getPrimaryKey()} instead.
+     * For the primary key **value** see {@see \rock\db\common\ActiveRecordInterface::getPrimaryKey()} instead.
      *
      * @return string[] the primary key name(s) for this AR class.
      */
@@ -84,10 +84,10 @@ interface ActiveRecordInterface
     public static function isPrimaryKey(array $keys);
 
     /**
-     * Creates an {@see \rock\db\ActiveQueryInterface} and {@see \rock\db\ActiveQuery} instance for query purpose.
+     * Creates an {@see \rock\db\common\ActiveQueryInterface} and {@see \rock\db\ActiveQuery} instance for query purpose.
      *
-     * The returned {@see \rock\db\ActiveQueryInterface} and {@see \rock\db\ActiveQuery} instance can be further customized by calling
-     * methods defined in {@see \rock\db\ActiveQueryInterface}  before `one()` or `all()` is called to return
+     * The returned {@see \rock\db\common\ActiveQueryInterface} and {@see \rock\db\ActiveQuery} instance can be further customized by calling
+     * methods defined in {@see \rock\db\common\ActiveQueryInterface}  before `one()` or `all()` is called to return
      * populated ActiveRecord instances. For example,
      *
      * ```php
@@ -101,7 +101,7 @@ interface ActiveRecordInterface
      *     ->all();
      * ```
      *
-     * This method is also called by {@see \rock\db\BaseActiveRecord::hasOne()} and {@see \rock\db\BaseActiveRecord::hasMany()} to
+     * This method is also called by {@see \rock\db\common\BaseActiveRecord::hasOne()} and {@see \rock\db\common\BaseActiveRecord::hasMany()} to
      * create a relational query.
      *
      * You may override this method to return a customized query. For example,
@@ -136,7 +136,7 @@ interface ActiveRecordInterface
      * // SELECT FROM customer WHERE age>30
      * $customers = Customer::find()->where('age>30')->all();
      *
-     * @return ActiveQueryInterface the newly created {@see \rock\db\ActiveQueryInterface} and {@see \rock\db\ActiveQuery} instance.
+     * @return ActiveQueryInterface the newly created {@see \rock\db\common\ActiveQueryInterface} and {@see \rock\db\ActiveQuery} instance.
      */
     public static function find();
 
@@ -151,7 +151,7 @@ interface ActiveRecordInterface
      *    matching all of them (or null if not found).
      *
      * Note that this method will automatically call the `one()` method and return an
-     * {@see \rock\db\ActiveRecordInterface} and {@see \rock\db\ActiveRecord} instance. For example,
+     * {@see \rock\db\common\ActiveRecordInterface} and {@see \rock\db\ActiveRecord} instance. For example,
      *
      * ```php
      * // find a single customer whose primary key value is 10
@@ -187,7 +187,7 @@ interface ActiveRecordInterface
      *    matching all of them (or an empty array if none was found).
      *
      * Note that this method will automatically call the `all()` method and return an array of
-     * {@see \rock\db\ActiveRecordInterface} and {@see \rock\db\ActiveRecord} instances. For example,
+     * {@see \rock\db\common\ActiveRecordInterface} and {@see \rock\db\ActiveRecord} instances. For example,
      *
      * ```php
      * // find the customers whose primary key value is 10
@@ -223,9 +223,9 @@ interface ActiveRecordInterface
      * ```
      *
      * @param array $attributes attribute values (name-value pairs) to be saved for the record.
-     * Unlike {@see \rock\db\ActiveRecordInterface::update()} these are not going to be validated.
+     * Unlike {@see \rock\db\common\ActiveRecordInterface::update()} these are not going to be validated.
      * @param array $condition the condition that matches the records that should get updated.
-     * Please refer to {@see \rock\db\QueryInterface::where()} on how to specify this parameter.
+     * Please refer to {@see \rock\db\common\QueryInterface::where()} on how to specify this parameter.
      * An empty condition will match all records.
      * @return integer the number of rows updated
      */
@@ -242,7 +242,7 @@ interface ActiveRecordInterface
      * ```
      *
      * @param array $condition the condition that matches the records that should get deleted.
-     * Please refer to {@see \rock\db\QueryInterface::where()} on how to specify this parameter.
+     * Please refer to {@see \rock\db\common\QueryInterface::where()} on how to specify this parameter.
      * An empty condition will match all records.
      * @return integer the number of rows deleted
      */
@@ -251,8 +251,8 @@ interface ActiveRecordInterface
     /**
      * Saves the current record.
      *
-     * This method will call {@see \rock\db\ActiveRecordInterface::insert()} when {@see \rock\db\ActiveRecordInterface::getIsNewRecord()}(new) is true, or {@see \rock\db\ActiveRecordInterface::update()}
-     * when {@see \rock\db\ActiveRecordInterface::getIsNewRecord()}(new) is false.
+     * This method will call {@see \rock\db\common\ActiveRecordInterface::insert()} when {@see \rock\db\common\ActiveRecordInterface::getIsNewRecord()}(new) is true, or {@see \rock\db\common\ActiveRecordInterface::update()}
+     * when {@see \rock\db\common\ActiveRecordInterface::getIsNewRecord()}(new) is false.
      *
      * For example, to save a customer record:
      *
@@ -325,13 +325,13 @@ interface ActiveRecordInterface
 
     /**
      * Returns a value indicating whether the current record is new (not saved in the database).
-     * @return boolean whether the record is new and should be inserted when calling {@see \rock\db\ActiveRecordInterface::save()}.
+     * @return boolean whether the record is new and should be inserted when calling {@see \rock\db\common\ActiveRecordInterface::save()}.
      */
     public function getIsNewRecord();
 
     /**
      * Returns a value indicating whether the given active record is the same as the current one.
-     * Two {@see \rock\db\ActiveRecordInterface::getIsNewRecord()}(new) records are considered to be not equal.
+     * Two {@see \rock\db\common\ActiveRecordInterface::getIsNewRecord()}(new) records are considered to be not equal.
      * @param static $record record to compare to
      * @return boolean whether the two active records refer to the same row in the same database table.
      */
@@ -339,7 +339,7 @@ interface ActiveRecordInterface
 
     /**
      * Returns the relation object with the specified name.
-     * A relation is defined by a getter method which returns an object implementing the {@see \rock\db\ActiveQueryInterface}
+     * A relation is defined by a getter method which returns an object implementing the {@see \rock\db\common\ActiveQueryInterface}
      * (normally this would be a relational {@see \rock\db\ActiveQuery} object).
      * It can be declared in either the ActiveRecord class itself or one of its behaviors.
      * @param string $name the relation name
@@ -364,7 +364,7 @@ interface ActiveRecordInterface
      * @param static $model the record to be linked with the current one.
      * @param array $extraColumns additional column values to be saved into the pivot table.
      * This parameter is only meaningful for a relationship involving a pivot table
-     * (i.e., a relation set with {@see \rock\db\ActiveQueryInterface::via()}.)
+     * (i.e., a relation set with {@see \rock\db\common\ActiveQueryInterface::via()}.)
      */
     public function link($name, $model, array $extraColumns = []);
 
