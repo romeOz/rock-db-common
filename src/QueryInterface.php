@@ -21,7 +21,7 @@ interface QueryInterface extends ComponentsInterface
      * If this parameter is not given, the `db` application component will be used.
      * @return array the query results. If the query results in nothing, an empty array will be returned.
      */
-    public function all($connection = null);
+    public function all(ConnectionInterface $connection = null);
 
     /**
      * Executes the query and returns a single row of result.
@@ -31,7 +31,7 @@ interface QueryInterface extends ComponentsInterface
      * @return array|boolean the first row (in terms of an array) of the query result. False is returned if the query
      * results in nothing.
      */
-    public function one($connection = null);
+    public function one(ConnectionInterface $connection = null);
 
     /**
      * Returns the number of records.
@@ -41,7 +41,7 @@ interface QueryInterface extends ComponentsInterface
      * If this parameter is not given, the `db` application component will be used.
      * @return integer number of records
      */
-    public function count($q = '*', $connection = null);
+    public function count($q = '*', ConnectionInterface $connection = null);
 
     /**
      * Returns a value indicating whether the query result contains any row of data.
@@ -50,7 +50,7 @@ interface QueryInterface extends ComponentsInterface
      * If this parameter is not given, the `db` application component will be used.
      * @return boolean whether the query result contains any row of data.
      */
-    public function exists($connection = null);
+    public function exists(ConnectionInterface $connection = null);
 
     /**
      * Sets the {@see \rock\db\QueryTrait::$indexBy} property.
