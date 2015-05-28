@@ -81,7 +81,7 @@ interface ActiveRecordInterface
      * @param array $keys the set of attributes to check
      * @return boolean whether the given set of attributes represents the primary key for this model
      */
-    public static function isPrimaryKey($keys);
+    public static function isPrimaryKey(array $keys);
 
     /**
      * Creates an {@see \rock\db\ActiveQueryInterface} and {@see \rock\db\ActiveQuery} instance for query purpose.
@@ -229,7 +229,7 @@ interface ActiveRecordInterface
      * An empty condition will match all records.
      * @return integer the number of rows updated
      */
-    public static function updateAll($attributes, $condition = null);
+    public static function updateAll(array $attributes, $condition = null);
 
     /**
      * Deletes records using the provided conditions.
@@ -270,7 +270,7 @@ interface ActiveRecordInterface
      * meaning all attributes that are loaded from DB will be saved.
      * @return boolean whether the saving succeeds
      */
-    public function save($runValidation = true, $attributeNames = null);
+    public function save($runValidation = true, array $attributeNames = null);
 
     /**
      * Inserts the record into the database using the attribute values of this record.
@@ -290,7 +290,7 @@ interface ActiveRecordInterface
      * meaning all attributes that are loaded from DB will be saved.
      * @return boolean whether the attributes are valid and the record is inserted successfully.
      */
-    public function insert($runValidation = true, $attributes = null);
+    public function insert($runValidation = true, array $attributes = null);
 
     /**
      * Saves the changes to this active record into the database.
@@ -313,7 +313,7 @@ interface ActiveRecordInterface
      * Note that it is possible that the number of rows affected is 0, even though the
      * update execution is successful.
      */
-    public function update($runValidation = true, $attributeNames = null);
+    public function update($runValidation = true, array $attributeNames = null);
 
     /**
      * Deletes the record from the database.
@@ -366,7 +366,7 @@ interface ActiveRecordInterface
      * This parameter is only meaningful for a relationship involving a pivot table
      * (i.e., a relation set with {@see \rock\db\ActiveQueryInterface::via()}.)
      */
-    public function link($name, $model, $extraColumns = []);
+    public function link($name, $model, array $extraColumns = []);
 
     /**
      * Destroys the relationship between two records.
@@ -384,7 +384,7 @@ interface ActiveRecordInterface
 
     /**
      * Returns the connection used by this AR class.
-     * @return Connection the database connection used by this AR class.
+     * @return ConnectionInterface the database connection used by this AR class.
      */
     public static function getConnection();
 

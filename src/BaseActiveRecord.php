@@ -137,7 +137,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @throws DbException
      * @return integer the number of rows updated
      */
-    public static function updateAll($attributes, $condition = '')
+    public static function updateAll(array $attributes, $condition = '')
     {
         throw new DbException(DbException::UNKNOWN_METHOD, ['method' => __METHOD__]);
     }
@@ -157,7 +157,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @throws DbException
      * @return integer the number of rows updated
      */
-    public static function updateAllCounters($counters, $condition = '')
+    public static function updateAllCounters(array $counters, $condition = '')
     {
         throw new DbException(DbException::UNKNOWN_METHOD, ['method' => __METHOD__]);
     }
@@ -178,7 +178,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @throws DbException
      * @return integer the number of rows deleted
      */
-    public static function deleteAll($condition = '', $params = [])
+    public static function deleteAll($condition = '', array $params = [])
     {
         throw new DbException(DbException::UNKNOWN_METHOD, ['method' => __METHOD__]);
     }
@@ -367,7 +367,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     public function hasMany($class, $link)
     {
         /** @var ActiveRecordInterface $class */
-        /** @var ActiveQuery $query */
+        /** @var ActiveQueryI $query */
         $query = $class::find();
         //$query->db = static::getDb();
         $query->primaryModel = $this;
@@ -464,7 +464,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @param array|null $values old attribute values to be set.
      * If set to `null` this record is considered to be {@see BaseActiveRecord::$isNewRecord}.
      */
-    public function setOldAttributes($values)
+    public function setOldAttributes(array $values = null)
     {
         $this->_oldAttributes = $values;
     }
@@ -531,7 +531,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * changed recently. If null, {@see \rock\db\BaseActiveRecord::getAttributes()} will be used.
      * @return array the changed attribute values (name-value pairs)
      */
-    public function getDirtyAttributes($names = null)
+    public function getDirtyAttributes(array $names = null)
     {
         if ($names === null) {
             $names = $this->attributes();
@@ -576,7 +576,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * meaning all attributes that are loaded from DB will be saved.
      * @return boolean whether the saving succeeds
      */
-    public function save($runValidation = true, $attributeNames = null)
+    public function save($runValidation = true, array $attributeNames = null)
     {
         if ($this->getIsNewRecord()) {
             return $this->insert($runValidation, $attributeNames);
@@ -635,7 +635,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * being updated is outdated.
      * @throws DbException in case update failed.
      */
-    public function update($runValidation = true, $attributeNames = null)
+    public function update($runValidation = true, array $attributeNames = null)
     {
         if ($runValidation && !$this->validate($attributeNames)) {
             return false;
@@ -658,7 +658,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @param array $attributes the attributes (names or name-value pairs) to be updated
      * @return integer the number of rows affected.
      */
-    public function updateAttributes($attributes)
+    public function updateAttributes(array $attributes)
     {
         $attrs = [];
         foreach ($attributes as $name => $value) {
@@ -690,7 +690,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @return integer number of rows updated
      * @throws DbException
      */
-    protected function updateInternal($attributes = null)
+    protected function updateInternal(array $attributes = null)
     {
         if (!$this->beforeSave(false)) {
             return false;
@@ -743,7 +743,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @return boolean whether the saving is successful
      * @see updateAllCounters()
      */
-    public function updateCounters($counters)
+    public function updateCounters(array $counters)
     {
         if ($this->updateAllCounters($counters, $this->getOldPrimaryKey(true)) > 0) {
             foreach ($counters as $name => $value) {
@@ -908,7 +908,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * `$changedAttributes` gives you the old attribute values while the active record (`$this`) has
      * already the new, updated values.
      */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, array $changedAttributes)
     {
         $event = new AfterSaveEvent([
             'changedAttributes' => $changedAttributes
@@ -1028,7 +1028,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * after executing a find method (e.g. `find()`, `findOne()`).
      * The value remains unchanged even if the primary key attribute is manually assigned with a different value.
      *
-*@param boolean $asArray whether to return the primary key value as an array. If true,
+     * @param boolean $asArray whether to return the primary key value as an array. If true,
      * the return value will be an array with column name as key and column value as value.
      * If this is false (default), a scalar value will be returned for non-composite primary key.
      * @property mixed The old primary key value. An array (column name => column value) is
@@ -1190,7 +1190,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * (i.e., a relation set with {@see \rock\db\ActiveRelationTrait::via()} or {@see \rock\db\ActiveQuery::viaTable()}.)
      * @throws DbException if the method is unable to link two models.
      */
-    public function link($name, $model, $extraColumns = [])
+    public function link($name, $model, array $extraColumns = [])
     {
         $relation = $this->getRelation($name);
 
@@ -1467,7 +1467,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @param array $keys the set of attributes to check
      * @return boolean whether the given set of attributes represents the primary key for this model
      */
-    public static function isPrimaryKey($keys)
+    public static function isPrimaryKey(array $keys)
     {
         $pks = static::primaryKey();
         if (count($keys) === count($pks)) {
