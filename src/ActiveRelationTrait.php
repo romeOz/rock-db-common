@@ -146,7 +146,7 @@ trait ActiveRelationTrait
             $realName = lcfirst(substr($method->getName(), 3));
             if ($realName !== $name) {
                 throw new DbException('Relation names are case sensitive. ' . get_class($model) .
-                                                         " has a relation named '{$realName}' instead of '{$name}'.");
+                    " has a relation named '{$realName}' instead of '{$name}'.");
             }
         }
 
@@ -418,7 +418,7 @@ trait ActiveRelationTrait
      */
     private function prefixKeyColumns($attributes)
     {
-        if ($this instanceof ActiveQuery && (!empty($this->join) || !empty($this->joinWith))) {
+        if ($this instanceof ActiveQueryInterface && (!empty($this->join) || !empty($this->joinWith))) {
             if (empty($this->from)) {
                 /** @var ActiveRecord $modelClass */
                 $modelClass = $this->modelClass;
