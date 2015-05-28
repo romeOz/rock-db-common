@@ -185,9 +185,9 @@ trait ActiveRelationTrait
      * @return array the related models
      * @throws DbException if {@see \rock\db\ActiveRelationTrait::$link} is invalid
      */
-    public function populateRelation($name, &$primaryModels)
+    public function populateRelation($name, array &$primaryModels)
     {
-        /** @var \rock\db\ActiveQuery $this */
+        /** @var ActiveQueryInterface $this */
 
         if (!is_array($this->link)) {
             throw new DbException('Invalid link: it must be an array of key-value pairs.');
@@ -289,13 +289,13 @@ trait ActiveRelationTrait
      * @param string $primaryName the primary relation name
      * @param string $name the relation name
      */
-    private function populateInverseRelation(&$primaryModels, $models, $primaryName, $name)
+    private function populateInverseRelation(array &$primaryModels, array $models, $primaryName, $name)
     {
         if (empty($models) || empty($primaryModels)) {
             return;
         }
         $model = reset($models);
-        /** @var ActiveQueryInterface|ActiveQuery $relation */
+        /** @var ActiveQueryInterface $relation */
         $relation = $model instanceof ActiveRecordInterface ? $model->getRelation($name) : (new $this->modelClass)->getRelation($name);
 
         if ($relation->multiple) {
@@ -349,7 +349,7 @@ trait ActiveRelationTrait
      * @param boolean $checkMultiple
      * @return array
      */
-    private function buildBuckets($models, $link, $viaModels = null, $viaLink = null, $checkMultiple = true)
+    private function buildBuckets(array $models, array $link, array $viaModels = null, array $viaLink = null, $checkMultiple = true)
     {
         if ($viaModels !== null) {
             $map = [];
@@ -399,7 +399,7 @@ trait ActiveRelationTrait
      * This can also be a callable (e.g. anonymous function) that returns the index value based on the given row data.
      * @return array
      */
-    private function indexBuckets($buckets, $indexBy)
+    private function indexBuckets(array $buckets, $indexBy)
     {
         $result = [];
         foreach ($buckets as $key => $models) {
@@ -416,11 +416,11 @@ trait ActiveRelationTrait
      * @param array $attributes the attributes to prefix
      * @return array
      */
-    private function prefixKeyColumns($attributes)
+    private function prefixKeyColumns(array $attributes)
     {
         if ($this instanceof ActiveQueryInterface && (!empty($this->join) || !empty($this->joinWith))) {
             if (empty($this->from)) {
-                /** @var ActiveRecord $modelClass */
+                /** @var ActiveRecordInterface $modelClass */
                 $modelClass = $this->modelClass;
                 $alias = $modelClass::tableName();
             } else {
@@ -454,9 +454,9 @@ trait ActiveRelationTrait
      * @param array $models
      * @throws DbException
      */
-    private function filterByModels($models)
+    private function filterByModels(array $models)
     {
-        /** @var \rock\db\ActiveQuery $this */
+        /** @var ActiveQueryInterface $this */
 
         $attributes = array_keys($this->link);
         $attributes = $this->prefixKeyColumns($attributes);
@@ -495,11 +495,11 @@ trait ActiveRelationTrait
     }
 
     /**
-     * @param ActiveRecord|array $model
+     * @param ActiveRecordInterface|array $model
      * @param array $attributes
      * @return string
      */
-    private function getModelKey($model, $attributes)
+    private function getModelKey($model, array $attributes)
     {
         if (count($attributes) > 1) {
             $key = [];
@@ -522,13 +522,13 @@ trait ActiveRelationTrait
      */
     private function findPivotRows($primaryModels)
     {
-        /** @var \rock\db\ActiveQuery $this */
+        /** @var ActiveQueryInterface $this */
 
         if (empty($primaryModels)) {
             return [];
         }
         $this->filterByModels($primaryModels);
-        /* @var ActiveRecord $primaryModel */
+        /* @var ActiveRecordInterface $primaryModel */
         $primaryModel = reset($primaryModels);
         if (!$primaryModel instanceof ActiveRecordInterface) {
             // when primaryModels are array of arrays (asArray case)
