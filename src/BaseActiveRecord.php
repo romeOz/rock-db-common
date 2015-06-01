@@ -134,7 +134,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * @param array $attributes attribute values (name-value pairs) to be saved into the table
      * @param string|array $condition the conditions that will be put in the WHERE part of the UPDATE SQL.
      * Please refer to {@see \rock\db\Query::where()} on how to specify this parameter.
-     * @throws DbException
+     * @throws DbException if not overridden
      * @return integer the number of rows updated
      */
     public static function updateAll(array $attributes, $condition = '')
