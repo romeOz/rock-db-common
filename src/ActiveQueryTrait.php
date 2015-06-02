@@ -104,7 +104,7 @@ trait ActiveQueryTrait
      */
     private function createModels($rows)
     {
-        /** @var ActiveQuery $this */
+        /** @var ActiveQueryInterface $this */
 
         $connection = $this->getConnection();
         $result = [];
@@ -112,9 +112,7 @@ trait ActiveQueryTrait
         $class = $this->modelClass;
 
         if ($this->asArray) {
-            if ($connection->typeCast) {
-                $rows = is_array($rows) ? ArrayHelper::toType($rows) : Helper::toType($rows);
-            }
+            $rows = $this->typeCast($rows, $connection);
             if ($this->indexBy === null) {
                 return $rows;
             }
