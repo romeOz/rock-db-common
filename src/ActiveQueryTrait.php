@@ -26,12 +26,12 @@ trait ActiveQueryTrait
 
     /**
      * Sets the {@see \rock\db\ActiveQueryTrait::$asArray} property.
-     * @param boolean $value whether to return the query results in terms of arrays instead of Active Records.
+     * @param boolean $asArray whether to return the query results in terms of arrays instead of Active Records.
      * @return static the query object itself
      */
-    public function asArray($value = true)
+    public function asArray($asArray = true)
     {
-        $this->asArray = $value;
+        $this->asArray = $asArray;
         return $this;
     }
 
@@ -107,7 +107,7 @@ trait ActiveQueryTrait
         /** @var ActiveQuery $this */
 
         $connection = $this->getConnection();
-        $models = [];
+        $result = [];
         /** @var ActiveRecord|\rock\sphinx\ActiveRecord $class */
         $class = $this->modelClass;
 
@@ -125,35 +125,30 @@ trait ActiveQueryTrait
                 } else {
                     $key = call_user_func($this->indexBy, $row);
                 }
-                $models[$key] = $row;
+                $result[$key] = $row;
             }
-        } else {
 
-            if ($this->indexBy === null) {
-                foreach ($rows as $row) {
-                    $model = $class::instantiate($row);
-                    /** @var ActiveRecord|\rock\sphinx\ActiveRecord $modelClass */
-                    $modelClass = get_class($model);
-                    $modelClass::populateRecord($model, $row, $connection);
-                    $models[] = $model;
-                }
-            } else {
-                foreach ($rows as $row) {
-                    $model = $class::instantiate($row);
-                    /** @var ActiveRecord|\rock\sphinx\ActiveRecord $modelClass */
-                    $modelClass = get_class($model);
-                    $modelClass::populateRecord($model, $row, $connection);
-                    if (is_string($this->indexBy)) {
-                        $key = $model->{$this->indexBy};
-                    } else {
-                        $key = call_user_func($this->indexBy, $model);
-                    }
-                    $models[$key] = $model;
-                }
-            }
+            return $result;
         }
 
-        return $models;
+        foreach ($rows as $key => $row) {
+            $model = $class::instantiate($row);
+            /** @var ActiveRecord|\rock\sphinx\ActiveRecord $modelClass */
+            $modelClass = get_class($model);
+            $modelClass::populateRecord($model, $row, $connection);
+            if ($this->indexBy === null) {
+                $result[$key] = $model;
+                continue;
+            }
+            if (is_string($this->indexBy)) {
+                $key = $model[$this->indexBy];
+            } else {
+                $key = call_user_func($this->indexBy, $model);
+            }
+            $result[$key] = $model;
+        }
+
+        return $result;
     }
 
     /**
