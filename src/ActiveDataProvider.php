@@ -99,7 +99,7 @@ class ActiveDataProvider implements ObjectInterface
      */
     protected $totalCount;
     /** @var  int[] */
-    private $_keys;
+    protected $keys;
 
     /**
      * Source as array.
@@ -144,8 +144,8 @@ class ActiveDataProvider implements ObjectInterface
             $data = $this->prepareModels($this->subattributes);
         } elseif ($this->query instanceof ActiveRecordInterface) {
             $result = $this->prepareDataWithCallback($this->query->toArray($this->only, $this->exclude, $this->expand));
-            if ($this->_keys === null) {
-                $this->_keys = $this->prepareKeys($result);
+            if ($this->keys === null) {
+                $this->keys = $this->prepareKeys($result);
             }
             return $result;
         } else {
@@ -231,10 +231,10 @@ class ActiveDataProvider implements ObjectInterface
      */
     public function getKeys()
     {
-        if (!isset($this->_keys)) {
+        if (!isset($this->keys)) {
             $this->get();
         }
-        return $this->_keys;
+        return $this->keys;
     }
 
     /**
@@ -247,16 +247,16 @@ class ActiveDataProvider implements ObjectInterface
             return [];
         }
         if (empty($this->pagination)) {
-            if ($this->_keys === null) {
-                $this->_keys = $this->prepareKeys($this->query);
+            if ($this->keys === null) {
+                $this->keys = $this->prepareKeys($this->query);
             }
             return $this->query;
         }
         $activePagination = $this->getPagination();
 
         $result = array_slice($this->query, $activePagination->offset, $activePagination->limit, true);
-        if ($this->_keys === null) {
-            $this->_keys = $this->prepareKeys($result);
+        if ($this->keys === null) {
+            $this->keys = $this->prepareKeys($result);
         }
         return $result;
     }
@@ -277,8 +277,8 @@ class ActiveDataProvider implements ObjectInterface
         $result = $this->fetchMode
             ? $this->query->createCommand($this->connection)->queryAll($this->fetchMode, $this->subattributes)
             : $this->query->all($this->connection, $this->subattributes);
-        if ($this->_keys === null) {
-            $this->_keys = $this->prepareKeys($result);
+        if ($this->keys === null) {
+            $this->keys = $this->prepareKeys($result);
         }
 
         return $result;
