@@ -16,7 +16,7 @@ trait ActiveQueryTrait
     /**
      * @var array a list of relations that this query should be performed with
      */
-    public $with;
+    public $with = [];
     /**
      * @var boolean whether to return each record as an array. If false (default), an object
      * of {@see \rock\db\ActiveQueryTrait::$modelClass} will be created to represent each record.
@@ -102,7 +102,7 @@ trait ActiveQueryTrait
      * @param array $rows
      * @return array|ActiveRecord[]
      */
-    private function createModels($rows)
+    private function createModels(array $rows)
     {
         /** @var ActiveQueryInterface $this */
 
@@ -155,7 +155,7 @@ trait ActiveQueryTrait
      * refer to {@see \rock\db\common\ActiveQueryInterface::with()} for details about specifying this parameter.
      * @param array|ActiveRecord[] $models the primary models (can be either AR instances or arrays)
      */
-    public function findWith($with, &$models)
+    public function findWith(array $with, array &$models)
     {
         $primaryModel = new $this->modelClass;
         $relations = $this->normalizeRelations($primaryModel, $with);
@@ -174,7 +174,7 @@ trait ActiveQueryTrait
      * @param array $with
      * @return ActiveQueryInterface[]
      */
-    private function normalizeRelations($model, $with)
+    private function normalizeRelations($model, array $with)
     {
         $relations = [];
         foreach ($with as $name => $callback) {
