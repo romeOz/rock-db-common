@@ -15,6 +15,7 @@ use rock\url\Url;
 
 /**
  * @property-read int $pageCount total count pages
+ * @property-read int pageCurrent current page
  * @property-read int $pageStart page start
  * @property-read int $pageEnd page end
  * @property-read int $pagePrev prev page
@@ -28,7 +29,7 @@ use rock\url\Url;
  *
  * @package rock\db
  */
-class ActiveDataPagination implements ObjectInterface, \ArrayAccess, Linkable
+class DataPagination implements ObjectInterface, \ArrayAccess, Linkable
 {
     use ObjectTrait;
 
@@ -86,11 +87,11 @@ class ActiveDataPagination implements ObjectInterface, \ArrayAccess, Linkable
                 $this->urlBuilder = new Url(null, is_array($this->urlBuilder) ? $this->urlBuilder : []);
             }
         }
-        $this->calculate();
     }
 
     public function __get($name)
     {
+        $this->calculate();
         if ($name === 'pageDisplay') {
             return isset($this->data[$name]) ? $this->data[$name] : [];
         }
@@ -109,6 +110,7 @@ class ActiveDataPagination implements ObjectInterface, \ArrayAccess, Linkable
 
     public function offsetExists($name)
     {
+        $this->calculate();
         return isset($this->data[$name]);
     }
 
@@ -183,6 +185,7 @@ class ActiveDataPagination implements ObjectInterface, \ArrayAccess, Linkable
         if (!$this->urlBuilder instanceof \rock\url\Url) {
             return [];
         }
+        $this->calculate();
         return [
             Link::REL_SELF => $this->createUrl($this->getPage(),$absolute),
             self::LINK_FIRST => $this->createUrl($this->pageFirst, $absolute),
@@ -193,10 +196,51 @@ class ActiveDataPagination implements ObjectInterface, \ArrayAccess, Linkable
     }
 
     /**
+     * Returns total count items.
+     * @return int
+     */
+    public function getTotalCount()
+    {
+        $this->calculate();
+        return $this->totalCount;
+    }
+
+    /**
+     * Return current page.
+     * @return int
+     */
+    public function getPageCurrent()
+    {
+        $this->calculate();
+        return isset($this->data['pageCurrent']) ? $this->data['pageCurrent'] : null;
+    }
+
+    /**
+     * Returns limit.
+     * @return int
+     */
+    public function getLimit()
+    {
+        $this->calculate();
+        return isset($this->data['limit']) ? $this->data['limit'] : null;
+    }
+
+    /**
+     * Returns offset.
+     * @return int
+     */
+    public function getOffset()
+    {
+        $this->calculate();
+        return isset($this->data['offset']) ? $this->data['offset'] : null;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
     {
+        $this->calculate();
         return $this->data;
     }
 

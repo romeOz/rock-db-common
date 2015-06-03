@@ -1,16 +1,14 @@
 <?php
 namespace rock\db\common;
 
+use rock\helpers\Instance;
+use rock\helpers\InstanceException;
 
-use rock\base\ObjectInterface;
-use rock\base\ObjectTrait;
-use rock\components\Model;
-use rock\helpers\ArrayHelper;
 
 /**
- * ActiveDataProvider implements a data provider based on {@see \rock\db\Query} and {@see \rock\db\ActiveQuery}.
+ * ActiveDataProvider implements a data provider based on {@see \rock\db\Query} and  {@see \rock\db\ActiveQuery}.
  *
- * ActiveDataProvider provides data by performing DB queries using {@see \rock\db\common\ActiveDataProvider::$query }.
+ * ActiveDataProvider provides data by performing DB queries using {@see \rock\db\common\ActiveDataProvider::$query}.
  *
  * The following is an example of using ActiveDataProvider to provide ActiveRecord instances:
  *
@@ -25,8 +23,8 @@ use rock\helpers\ArrayHelper;
  *     ],
  * ]);
  *
- * $provider->get(); // returns list items in the current page
- * $provider->getPagination(); // returns \rock\db\common\ActiveDataPagination
+ * $posts = $provider->getModels(); // returns the posts in the current page
+ * $provider->getPagination(); // returns ActiveDataPagination
  * ```
  *
  * And the following example shows how to use ActiveDataProvider without ActiveRecord:
@@ -43,270 +41,68 @@ use rock\helpers\ArrayHelper;
  *     ],
  * ]);
  *
- * $provider->get(); // returns list items in the current page
- * $provider->getPagination(); // returns \rock\db\common\ActiveDataPagination
+ * $posts = $provider->getModels(); // returns the posts in the current page
+ * $provider->getPagination(); // returns ActiveDataPagination
  * ```
- *
  */
-class ActiveDataProvider implements ObjectInterface
+class ActiveDataProvider extends BaseDataProvider
 {
-    use ObjectTrait;
-
     /**
-     * Source. Can be array or Model.
-     * @var QueryInterface
+     * @var QueryInterface the query that is used to fetch data models and {@see \rock\db\common\BaseDataProvider::$totalCount}
+     * if it is not explicitly set.
      */
     public $query;
-    /** @var  ConnectionInterface */
-    public $connection;
-    /**
-     * List data pagination.
-     * @var array
-     */
-    public $pagination = [];
-    /**
-     * Prepare list items.
-     * @var callable
-     */
-    public $callback;
-    public $only = [];
-    public $exclude = [];
-    public $expand = [];
     /**
      * @var string|callable the column that is used as the key of the data models.
      * This can be either a column name, or a callable that returns the key value of a given data model.
      *
      * If this is not set, the following rules will be used to determine the keys of the data models:
      *
-     * - If {@see \rock\db\common\ActiveDataProvider::$query} is an {@see \rock\db\ActiveQuery} instance, the primary keys of {@see \rock\db\ActiveQuery::$modelClass} will be used.
+     * - If {@see \rock\db\common\ActiveDataProvider::$query} is an  {@see \rock\db\ActiveQuery} instance, the primary keys of {@see \rock\db\ActiveQuery::$modelClass} will be used.
+     * - Otherwise, the keys of the {@see \rock\db\common\BaseDataProvider::$models} array will be used.
      *
      * @see getKeys()
      */
     public $key;
     /**
+     * @var ConnectionInterface|array|string the DB connection object or the application component ID of the DB connection.
+     * If not set, the default DB connection will be used.
+     */
+    public $connection;
+    /**
      * Calculate sub-attributes (e.g `category.id => [category][id]`).
      * @var bool
      */
     public $subattributes = true;
-    /**
-     * @var int $fetchMode the result fetch mode. Please refer to [PHP manual](http://www.php.net/manual/en/function.PDOStatement-setFetchMode.php)
-     * for valid fetch modes. If this parameter is null, the value set in {@see \rock\db\Command::$fetchMode} will be used.
-     */
-    public $fetchMode;
-    /**
-     * Total count items.
-     * @var int
-     */
-    protected $totalCount;
-    /** @var  int[] */
-    protected $keys;
 
     /**
-     * Source as array.
-     * @param array $array list items.
-     * @return $this
+     * Initializes the DB connection component.
+     * This method will initialize the {@see \rock\db\common\ActiveDataProvider::$connection} property to make sure it refers to a valid DB connection.
+     * @throws InstanceException if {@see \rock\db\common\ActiveDataProvider::$connection} is invalid.
      */
-    public function setArray(array $array)
+    public function init()
     {
-        $this->query = $array;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function get()
-    {
-        if (empty($this->query)) {
-            return [];
+        parent::init();
+        if (is_string($this->connection)) {
+            $this->connection = Instance::ensure($this->connection, \rock\db\Connection::className());
         }
-
-        $result = [];
-        if (is_array($this->query)) {
-            $result = $this->prepareArray();
-        } elseif ($this->query instanceof QueryInterface) {
-            $result = $this->prepareModels($this->subattributes);
-        }
-
-        return $this->prepareDataWithCallback($result);
-    }
-
-    public function toArray()
-    {
-        if (empty($this->query)) {
-            return [];
-        }
-
-        $firstElement = null;
-        if (is_array($this->query)) {
-            $data = $this->prepareArray();
-        } elseif ($this->query instanceof QueryInterface) {
-            $data = $this->prepareModels($this->subattributes);
-        } elseif ($this->query instanceof ActiveRecordInterface) {
-            $result = $this->prepareDataWithCallback($this->query->toArray($this->only, $this->exclude, $this->expand));
-            if ($this->keys === null) {
-                $this->keys = $this->prepareKeys($result);
-            }
-            return $result;
-        } else {
-            throw new DbException('Var must be of type array or instances ActiveRecord.');
-        }
-
-        if (!is_array($data)) {
-            throw new DbException('Var must be of type array or instances ActiveRecord.');
-        }
-
-        reset($data);
-        $firstElement = current($data);
-        // as ActiveRecord[]
-        if (is_array($data) && $firstElement instanceof ActiveRecordInterface) {
-            return $this->prepareDataWithCallback(
-                array_map(
-                    function(Model $value){
-                        return $value->toArray($this->only, $this->exclude, $this->expand);
-                    },
-                    $data
-                )
-            );
-        }
-
-        // as Array
-        if (ArrayHelper::depth($data, true) === 0) {
-            return $this->prepareDataWithCallback(ArrayHelper::only($data, $this->only, $this->exclude));
-        }
-
-        if (!empty($this->only) || !empty($this->exclude)) {
-            return $this->prepareDataWithCallback(
-                array_map(
-                    function($value){
-                        return ArrayHelper::only($value, $this->only, $this->exclude);
-                    },
-                    $data
-                )
-            );
-        }
-
-        return $this->prepareDataWithCallback($data);
-    }
-
-    /**
-     * @var ActiveDataPagination
-     */
-    protected $activePagination;
-
-    /**
-     * Returns data pagination.
-     *
-     * @return ActiveDataPagination
-     */
-    public function getPagination()
-    {
-        if (!isset($this->activePagination)) {
-            if (!isset($this->totalCount)) {
-                $this->toArray();
-            }
-            $config = $this->pagination;
-            $config['totalCount'] = (int)$this->totalCount;
-
-            $this->activePagination = new ActiveDataPagination($config);
-        }
-
-        return $this->activePagination;
-    }
-
-    /**
-     * Get total count items
-     *
-     * @return int
-     */
-    public function getTotalCount()
-    {
-        return $this->totalCount;
-    }
-
-    /**
-     * Returns the key values associated with the data models.
-     * @return array the list of key values corresponding.
-     * is uniquely identified by the corresponding key value in this array.
-     */
-    public function getKeys()
-    {
-        if (!isset($this->keys)) {
-            $this->get();
-        }
-        return $this->keys;
-    }
-
-    /**
-     * @return array
-     */
-    protected function prepareArray()
-    {
-        if (!$this->totalCount = count($this->query)) {
-            $this->totalCount = 0;
-            return [];
-        }
-        if (empty($this->pagination)) {
-            if ($this->keys === null) {
-                $this->keys = $this->prepareKeys($this->query);
-            }
-            return $this->query;
-        }
-        $activePagination = $this->getPagination();
-
-        $result = array_slice($this->query, $activePagination->offset, $activePagination->limit, true);
-        if ($this->keys === null) {
-            $this->keys = $this->prepareKeys($result);
-        }
-        return $result;
-    }
-
-    /**
-     * @return ActiveRecordInterface
-     */
-    protected function prepareModels()
-    {
-        if (!$this->totalCount = $this->calculateTotalCount()) {
-            return [];
-        }
-        $activePagination = $this->getPagination();
-
-        $this->query
-            ->limit($activePagination->limit)
-            ->offset($activePagination->offset);
-        $result = $this->fetchMode
-            ? $this->query->createCommand($this->connection)->queryAll($this->fetchMode, $this->subattributes)
-            : $this->query->all($this->connection, $this->subattributes);
-        if ($this->keys === null) {
-            $this->keys = $this->prepareKeys($result);
-        }
-
-        return $result;
     }
 
     /**
      * @inheritdoc
      */
-    protected function calculateTotalCount()
+    protected function prepareModels()
     {
+        if (!$this->query instanceof QueryInterface) {
+            throw new DbException('The "query" property must be an instance of a class that implements the QueryInterface e.g. yii\db\Query or its subclasses.');
+        }
         $query = clone $this->query;
-
-        return (int)$query->limit(-1)
-            ->offset(-1)
-            ->orderBy([])
-            ->count('*', $this->connection);
-    }
-
-    protected function prepareDataWithCallback(array $data)
-    {
-        if (!$this->callback instanceof \Closure || empty($data)) {
-            return $data;
-        }
-        foreach ($data as $name => $value) {
-            $data[$name] = ArrayHelper::map($value, $this->callback);
+        if (($pagination = $this->getPagination()) !== false) {
+            $pagination->totalCount = $this->getTotalCount();
+            $query->limit($pagination->limit)->offset($pagination->offset);
         }
 
-        return $data;
+        return $query->all($this->connection, $this->subattributes);
     }
 
     /**
@@ -332,26 +128,30 @@ class ActiveDataProvider implements ObjectInterface
             if (count($pks) === 1) {
                 $pk = $pks[0];
                 foreach ($models as $model) {
-                    if (!isset($model[$pk])) {
-                        continue;
-                    }
                     $keys[] = $model[$pk];
                 }
             } else {
                 foreach ($models as $model) {
                     $kk = [];
                     foreach ($pks as $pk) {
-                        if (!isset($model[$pk])) {
-                            continue;
-                        }
                         $kk[$pk] = $model[$pk];
                     }
-                    if (!empty($kk)) {
-                        $keys[] = $kk;
-                    }
+                    $keys[] = $kk;
                 }
             }
         }
         return $keys ? : array_keys($models);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function prepareTotalCount()
+    {
+        if (!$this->query instanceof QueryInterface) {
+            throw new DbException('The "query" property must be an instance of a class that implements the QueryInterface e.g. yii\db\Query or its subclasses.');
+        }
+        $query = clone $this->query;
+        return (int) $query->limit(-1)->offset(-1)->orderBy([])->count('*', $this->connection);
     }
 }
