@@ -24,7 +24,7 @@ use rock\helpers\InstanceException;
  * ]);
  *
  * $posts = $provider->getModels(); // returns the posts in the current page
- * $provider->getPagination(); // returns ActiveDataPagination
+ * $provider->getPagination(); // returns DataPagination
  * ```
  *
  * And the following example shows how to use ActiveDataProvider without ActiveRecord:
@@ -42,7 +42,7 @@ use rock\helpers\InstanceException;
  * ]);
  *
  * $posts = $provider->getModels(); // returns the posts in the current page
- * $provider->getPagination(); // returns ActiveDataPagination
+ * $provider->getPagination(); // returns DataPagination
  * ```
  */
 class ActiveDataProvider extends BaseDataProvider

@@ -177,7 +177,7 @@ class DataPagination implements ObjectInterface, \ArrayAccess, Linkable
      * Returns a whole set of links for navigating to the first, last, next and previous pages.
      * @param boolean $absolute whether the generated URLs should be absolute.
      * @return array the links for navigational purpose.
-     * The array keys specify the purpose of the links (e.g. {@see \rock\db\common\ActiveDataPagination::LINK_FIRST}),
+     * The array keys specify the purpose of the links (e.g. {@see \rock\db\common\DataPagination::LINK_FIRST}),
      * and the array values are the corresponding URLs.
      */
     public function getLinks($absolute = false)
