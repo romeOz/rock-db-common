@@ -89,34 +89,13 @@ class DataPagination implements ObjectInterface, \ArrayAccess, Linkable
         }
     }
 
-    public function __get($name)
+    /**
+     * Sets the current page number.
+     * @param integer $value the zero-based index of the current page.
+     */
+    public function setPage($value)
     {
-        $this->calculate();
-        if ($name === 'pageDisplay') {
-            return isset($this->data[$name]) ? $this->data[$name] : [];
-        }
-        return isset($this->data[$name]) ? $this->data[$name] : 0;
-    }
-
-    public function offsetGet($name)
-    {
-        return $this->$name;
-    }
-
-    public function offsetSet($name, $value)
-    {
-        $this->$name = $value;
-    }
-
-    public function offsetExists($name)
-    {
-        $this->calculate();
-        return isset($this->data[$name]);
-    }
-
-    public function offsetUnset($name)
-    {
-        throw new DbException(DbException::SETTING_READ_ONLY_PROPERTY, ['class' => __CLASS__, 'property' => $name]);
+        $this->page = $value;
     }
 
     /**
@@ -142,13 +121,155 @@ class DataPagination implements ObjectInterface, \ArrayAccess, Linkable
     }
 
     /**
-     * Sets the current page number.
-     * @param integer $value the zero-based index of the current page.
+     * Return current page.
+     * @param bool $recalculate
+     * @return int|null
      */
-    public function setPage($value)
+    public function getPageCurrent($recalculate = false)
     {
-        $this->page = $value;
-        $this->calculate(true);
+        $this->calculate($recalculate);
+        return isset($this->data['pageCurrent']) ? $this->data['pageCurrent'] : null;
+    }
+
+    /**
+     * Returns begin page.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getPageStart($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pageStart']) ? $this->data['pageStart'] : null;
+    }
+
+    /**
+     * Returns end page.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getPageEnd($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pageEnd']) ? $this->data['pageEnd'] : null;
+    }
+
+    /**
+     * Returns first display page.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getPageFirst($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pageFirst']) ? $this->data['pageFirst'] : null;
+    }
+
+    /**
+     * Returns last display page.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getPageLast($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pageLast']) ? $this->data['pageLast'] : null;
+    }
+
+    /**
+     * Returns prev display page.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getPagePrev($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pagePrev']) ? $this->data['pagePrev'] : null;
+    }
+
+    /**
+     * Returns next display page.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getPageNext($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pageNext']) ? $this->data['pageNext'] : null;
+    }
+
+    /**
+     * Returns list display pages.
+     * @return array
+     */
+    public function getPageDisplay()
+    {
+        return isset($this->data['pageDisplay']) ? $this->data['pageDisplay'] : [];
+    }
+
+    /**
+     * Returns total count pages.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getPageCount($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pageCount']) ? $this->data['pageCount'] : null;
+    }
+
+    /**
+     * Returns total count items.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getTotalCount($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return $this->totalCount;
+    }
+
+    /**
+     * Returns count more items.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getCountMore($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['pageCount']) ? $this->data['pageCount'] : null;
+    }
+
+    /**
+     * Returns limit.
+     * @param bool $recalculate
+     * @return int
+     */
+    public function getLimit($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return $this->limit;
+    }
+
+    /**
+     * Returns offset.
+     * @param bool $recalculate
+     * @return int|null
+     */
+    public function getOffset($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return isset($this->data['offset']) ? $this->data['offset'] : null;
+    }
+
+    /**
+     * Returns all list pagination params.
+     * @param bool $recalculate
+     * @return array
+     */
+    public function toArray($recalculate = false)
+    {
+        $this->calculate($recalculate);
+        return $this->data;
     }
 
     /**
@@ -170,7 +291,6 @@ class DataPagination implements ObjectInterface, \ArrayAccess, Linkable
         }
 
         return $this->urlBuilder->getRelativeUrl(true);
-
     }
 
     /**
@@ -188,62 +308,39 @@ class DataPagination implements ObjectInterface, \ArrayAccess, Linkable
         $this->calculate();
         return [
             Link::REL_SELF => $this->createUrl($this->getPage(),$absolute),
-            self::LINK_FIRST => $this->createUrl($this->pageFirst, $absolute),
-            self::LINK_PREV =>$this->createUrl($this->pagePrev, $absolute),
-            self::LINK_NEXT =>$this->createUrl($this->pageNext,$absolute),
-            self::LINK_LAST => $this->createUrl($this->pageLast, $absolute),
+            self::LINK_FIRST => $this->createUrl($this->getPageFirst(), $absolute),
+            self::LINK_PREV =>$this->createUrl($this->getPagePrev(), $absolute),
+            self::LINK_NEXT =>$this->createUrl($this->getPageNext(),$absolute),
+            self::LINK_LAST => $this->createUrl($this->getPageLast(), $absolute),
         ];
     }
 
-    /**
-     * Returns total count items.
-     * @return int
-     */
-    public function getTotalCount()
+    public function offsetSet($name, $value)
+    {
+        $this->$name = $value;
+    }
+
+    public function offsetGet($name)
     {
         $this->calculate();
-        return $this->totalCount;
+        return $this->$name;
+    }
+
+    public function offsetExists($name)
+    {
+        $this->calculate();
+        return isset($this->data[$name]);
+    }
+
+    public function offsetUnset($name)
+    {
+        throw new DbException(DbException::SETTING_READ_ONLY_PROPERTY, ['class' => __CLASS__, 'property' => $name]);
     }
 
     /**
-     * Return current page.
-     * @return int
+     * Calculate params pagination.
+     * @param bool $recalculate
      */
-    public function getPageCurrent()
-    {
-        $this->calculate();
-        return isset($this->data['pageCurrent']) ? $this->data['pageCurrent'] : null;
-    }
-
-    /**
-     * Returns limit.
-     * @return int
-     */
-    public function getLimit()
-    {
-        $this->calculate();
-        return isset($this->data['limit']) ? $this->data['limit'] : null;
-    }
-
-    /**
-     * Returns offset.
-     * @return int
-     */
-    public function getOffset()
-    {
-        $this->calculate();
-        return isset($this->data['offset']) ? $this->data['offset'] : null;
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        $this->calculate();
-        return $this->data;
-    }
-
     protected function calculate($recalculate = false)
     {
         if (empty($this->data) || $recalculate) {
