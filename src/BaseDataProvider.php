@@ -14,7 +14,7 @@ use rock\helpers\Instance;
  * @property array $keys The list of key values corresponding to {@see \rock\common\db\BaseDataProvider::$models}. Each data model in {@see \rock\common\db\BaseDataProvider::$models} is
  * uniquely identified by the corresponding key value in this array.
  * @property array $models The list of data models in the current page.
- * @property DataPagination|boolean $pagination The pagination object. If this is false, it means the pagination
+ * @property PaginationProvider|boolean $pagination The pagination object. If this is false, it means the pagination
  * is disabled. Note that the type of this property differs in getter and setter. See {@see \rock\common\db\BaseDataProvider::getPagination()} and
  * {@see \rock\common\db\BaseDataProvider::setPagination()} for details.
  * @property integer $totalCount Total number of possible data models.
@@ -121,7 +121,7 @@ abstract class BaseDataProvider implements ObjectInterface, DataProviderInterfac
 
     /**
      * Returns the total number of data models.
-     * When {@see \rock\db\common\DataPagination} is false, this returns the same value as {@see \rock\db\common\BaseDataProvider::count()}.
+     * When {@see \rock\db\common\PaginationProvider} is false, this returns the same value as {@see \rock\db\common\BaseDataProvider::count()}.
      * Otherwise, it will call {@see \rock\db\common\BaseDataProvider::prepareTotalCount()} to get the count.
      * @return integer total number of possible data models.
      */
@@ -148,8 +148,8 @@ abstract class BaseDataProvider implements ObjectInterface, DataProviderInterfac
     /**
      * Returns the pagination object used by this data provider.
      * Note that you should call {@see \rock\db\common\BaseDataProvider::prepare()} or {@see \rock\db\common\BaseDataProvider::getModels()} first to get correct values
-     * of {@see \rock\db\common\DataPagination::$totalCount} and {@see \rock\db\common\DataPagination::$pageCount}.
-     * @return DataPagination|boolean the pagination object. If this is false, it means the pagination is disabled.
+     * of {@see \rock\db\common\PaginationProvider::$totalCount} and {@see \rock\db\common\PaginationProvider::$pageCount}.
+     * @return PaginationProvider|boolean the pagination object. If this is false, it means the pagination is disabled.
      */
     public function getPagination()
     {
@@ -162,12 +162,12 @@ abstract class BaseDataProvider implements ObjectInterface, DataProviderInterfac
 
     /**
      * Sets the pagination for this data provider.
-     * @param array|DataPagination|boolean $value the pagination to be used by this data provider.
+     * @param array|PaginationProvider|boolean $value the pagination to be used by this data provider.
      * This can be one of the following:
      *
      * - a configuration array for creating the pagination object. The "class" element defaults
-     *   to 'rock\db\common\DataPagination'
-     * - an instance of {@see \rock\db\common\DataPagination} or its subclass
+     *   to 'rock\db\common\PaginationProvider'
+     * - an instance of {@see \rock\db\common\PaginationProvider} or its subclass
      * - false, if pagination needs to be disabled.
      *
      * @throws DbException
@@ -175,10 +175,10 @@ abstract class BaseDataProvider implements ObjectInterface, DataProviderInterfac
     public function setPagination($value)
     {
         if (is_array($value)) {
-            $config = ['class' => DataPagination::className()];
+            $config = ['class' => PaginationProvider::className()];
 
             $this->_pagination = Instance::ensure(array_merge($config, $value));
-        } elseif ($value instanceof DataPagination || $value === false) {
+        } elseif ($value instanceof PaginationProvider || $value === false) {
             $this->_pagination = $value;
         } else {
             throw new DbException('Only Pagination instance, configuration array or false is allowed.');

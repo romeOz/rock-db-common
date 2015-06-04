@@ -49,7 +49,7 @@ interface DataProviderInterface
     public function getKeys();
 
     /**
-     * @return DataPagination the pagination object. If this is false, it means the pagination is disabled.
+     * @return PaginationProvider the pagination object. If this is false, it means the pagination is disabled.
      */
     public function getPagination();
 }
