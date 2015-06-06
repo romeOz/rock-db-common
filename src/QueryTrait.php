@@ -38,7 +38,23 @@ trait QueryTrait
      * row data. For more details, see {@see \rock\db\common\QueryInterface::indexBy()}. This property is only used by {@see \rock\db\common\QueryInterface::all()}.
      */
     public $indexBy;
+    /**
+     * Convert subattributes the query results.
+     * @var boolean
+     */
+    public $toSubattributes = false;
 
+
+    /**
+     * Sets the {@see \rock\db\ActiveQueryTrait::$toSubattributes} property.
+     * @param boolean $toSubattributes convert subattributes the query results.
+     * @return static the query object itself
+     */
+    public function toSubattributes($toSubattributes = true)
+    {
+        $this->toSubattributes = $toSubattributes;
+        return $this;
+    }
 
     /**
      * Sets the {@see \rock\db\common\QueryInterface::$indexBy} property.
