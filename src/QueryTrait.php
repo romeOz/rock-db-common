@@ -1,8 +1,6 @@
 <?php
 namespace rock\db\common;
 
-use rock\di\Container;
-
 /**
  * The BaseQuery trait represents the minimum method set of a database Query.
  *
@@ -312,7 +310,7 @@ trait QueryTrait
     public function addOrderBy($columns)
     {
         $columns = $this->normalizeOrderBy($columns);
-        if ($this->orderBy === null) {
+        if (empty($this->orderBy)) {
             $this->orderBy = $columns;
         } else {
             $this->orderBy = array_merge($this->orderBy, $columns);
