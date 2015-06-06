@@ -134,6 +134,9 @@ class ActiveDataProvider extends BaseDataProvider
                 foreach ($models as $model) {
                     $kk = [];
                     foreach ($pks as $pk) {
+                        if (!isset($model[$pk])) {
+                            continue;
+                        }
                         $kk[$pk] = $model[$pk];
                     }
                     $keys[] = $kk;
