@@ -366,11 +366,6 @@ trait QueryTrait
 
     public function refresh(ConnectionInterface $connection = null)
     {
-        if (isset($connection)) {
-            $this->setConnection($connection);
-        }
-        $connection = $this->getConnection();
-        $connection->getQueryBuilder()->build($this);
         return $this;
     }
 
