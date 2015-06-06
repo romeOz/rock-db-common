@@ -79,7 +79,7 @@ class ActiveDataProvider extends BaseDataProvider
     {
         parent::init();
         if (isset($this->connection)) {
-            $this->connection = Instance::ensure($this->connection, \rock\db\Connection::className());
+            $this->connection = Instance::ensure($this->connection, '\rock\db\Connection');
         }
     }
 
