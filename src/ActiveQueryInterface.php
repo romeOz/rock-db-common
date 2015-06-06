@@ -91,4 +91,26 @@ interface ActiveQueryInterface extends QueryInterface
      * @return mixed the related record(s)
      */
     public function findFor($name, $model);
+
+    /**
+     * Sets the name of the relation that is the inverse of this relation.
+     * For example, an order has a customer, which means the inverse of the "customer" relation
+     * is the "orders", and the inverse of the "orders" relation is the "customer".
+     * If this property is set, the primary record(s) will be referenced through the specified relation.
+     * For example, `$customer->orders[0]->customer` and `$customer` will be the same object,
+     * and accessing the customer of an order will not trigger a new DB query.
+     *
+     * Use this method when declaring a relation in the {@see \rock\db\ActiveRecord} class:
+     *
+     * ```php
+     * public function getOrders()
+     * {
+     *     return $this->hasMany(Order::className(), ['customer_id' => 'id'])->inverseOf('customer');
+     * }
+     * ```
+     *
+     * @param string $relationName the name of the relation that is the inverse of this relation.
+     * @return static the relation object itself.
+     */
+    public function inverseOf($relationName);
 }

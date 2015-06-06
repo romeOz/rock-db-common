@@ -98,7 +98,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * Finds ActiveRecord instance(s) by the given condition.
-     * 
+     *
      * This method is internally called by {@see BaseActiveRecord::findOne()} and {@see BaseActiveRecord::findAll()}.
      *
      * @param mixed $condition please refer to {@see BaseActiveRecord::findOne()} for the explanation of this parameter
@@ -214,7 +214,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * PHP getter magic method.
-     * 
+     *
      * This method is overridden so that attributes and related objects can be accessed like properties.
      *
      * @param string $name property name
@@ -324,7 +324,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
     public function hasOne($class, $link)
     {
         /** @var ActiveRecordInterface $class */
-        /** @var ActiveQuery $query */
+        /** @var ActiveQueryInterface $query */
         $query = $class::find();
         //$query->db = static::getDb();
         $query->primaryModel = $this;
@@ -1171,7 +1171,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
             if ($realName !== $name) {
                 if ($throwException) {
                     throw new DbException('Relation names are case sensitive. ' . get_class($this) .
-                                                             " has a relation named \"$realName\" instead of \"$name\".");
+                        " has a relation named \"$realName\" instead of \"$name\".");
                 } else {
                     return null;
                 }
@@ -1460,7 +1460,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
             $value = $primaryModel->$pk;
             if ($value === null) {
                 throw new DbException('Unable to link models: the primary key of ' . get_class($primaryModel) .
-                                    ' is null.');
+                    ' is null.');
             }
             if (is_array($foreignModel->$fk)) { // relation via array valued attribute
                 $foreignModel->$fk = array_merge($foreignModel->$fk, [$value]);
@@ -1473,7 +1473,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * Returns a value indicating whether the given set of attributes represents the primary key for this model.
-     * 
+     *
      * @param array $keys the set of attributes to check
      * @return boolean whether the given set of attributes represents the primary key for this model
      */
@@ -1489,7 +1489,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * Returns the text label for the specified attribute.
-     * 
+     *
      * If the attribute looks like `relatedModel.attribute`, then the attribute will be received from the related model.
      * @param string $attribute the attribute name
      * @return string the attribute label
@@ -1587,7 +1587,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
     /**
      * Sets the element value at the specified offset to null.
-     * 
+     *
      * This method is required by the SPL interface `ArrayAccess`.
      * It is implicitly called when you use something like `unset($model[$offset])`.
      * @param mixed $offset the offset to unset element
