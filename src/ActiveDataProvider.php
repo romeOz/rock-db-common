@@ -69,11 +69,6 @@ class ActiveDataProvider extends BaseDataProvider
      * If not set, the default DB connection will be used.
      */
     public $connection;
-    /**
-     * Calculate sub-attributes (e.g `category.id => [category][id]`).
-     * @var bool
-     */
-    public $subattributes = true;
 
     /**
      * Initializes the DB connection component.
@@ -83,7 +78,7 @@ class ActiveDataProvider extends BaseDataProvider
     public function init()
     {
         parent::init();
-        if (is_string($this->connection)) {
+        if (is_string($this->connection) || is_array($this->connection)) {
             $this->connection = Instance::ensure($this->connection, \rock\db\Connection::className());
         }
     }
@@ -102,7 +97,7 @@ class ActiveDataProvider extends BaseDataProvider
             $query->limit($pagination->limit)->offset($pagination->offset);
         }
 
-        return $query->all($this->connection, $this->subattributes);
+        return $query->all($this->connection);
     }
 
     /**
