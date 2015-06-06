@@ -251,4 +251,11 @@ interface QueryInterface extends ComponentsInterface
      * @return static the query object itself
      */
     public function offset($offset);
+
+    /**
+     * Sets the {@see \rock\db\ActiveQueryTrait::$asSubattributes} property.
+     * @param boolean $asSubattributes convert sub-attributes the query results (e.g `category.id => [category][id]`).
+     * @return static the query object itself
+     */
+    public function asSubattributes($asSubattributes = true);
 }

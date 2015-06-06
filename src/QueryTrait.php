@@ -39,20 +39,20 @@ trait QueryTrait
      */
     public $indexBy;
     /**
-     * Convert subattributes the query results (e.g `category.id => [category][id]`).
+     * Convert sub-attributes the query results (e.g `category.id => [category][id]`).
      * @var boolean
      */
-    public $toSubattributes = false;
+    public $asSubattributes = false;
 
 
     /**
-     * Sets the {@see \rock\db\ActiveQueryTrait::$toSubattributes} property.
-     * @param boolean $toSubattributes convert subattributes the query results (e.g `category.id => [category][id]`).
+     * Sets the {@see \rock\db\ActiveQueryTrait::$asSubattributes} property.
+     * @param boolean $asSubattributes convert sub-attributes the query results (e.g `category.id => [category][id]`).
      * @return static the query object itself
      */
-    public function toSubattributes($toSubattributes = true)
+    public function asSubattributes($asSubattributes = true)
     {
-        $this->toSubattributes = $toSubattributes;
+        $this->asSubattributes = $asSubattributes;
         return $this;
     }
 
