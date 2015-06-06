@@ -155,6 +155,7 @@ class ActiveDataProvider extends BaseDataProvider
             throw new DbException('The "query" property must be an instance of a class that implements the QueryInterface e.g. yii\db\Query or its subclasses.');
         }
         $query = clone $this->query;
+        $query->refresh(); // when use with-relation
         return (int) $query->limit(-1)->offset(-1)->orderBy([])->count('*', $this->connection);
     }
 }

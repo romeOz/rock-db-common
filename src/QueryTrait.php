@@ -364,6 +364,16 @@ trait QueryTrait
         return $this;
     }
 
+    public function refresh(ConnectionInterface $connection = null)
+    {
+        if (isset($connection)) {
+            $this->setConnection($connection);
+        }
+        $connection = $this->getConnection();
+        $connection->getQueryBuilder()->build($this);
+        return $this;
+    }
+
     protected function removeAliasEntity($entity)
     {
         if (preg_match('/^(.*?)(?i:\s+as\s+|\s+)([\w\-_\.]+)$/', $entity, $matches)) {
