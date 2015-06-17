@@ -130,7 +130,8 @@ class ActiveDataProvider extends BaseDataProvider
                     $kk = [];
                     foreach ($pks as $pk) {
                         if (!isset($model[$pk])) {
-                            continue;
+                            // do not continue if the primary key is not part of the result set
+                            break 2;
                         }
                         $kk[$pk] = $model[$pk];
                     }
