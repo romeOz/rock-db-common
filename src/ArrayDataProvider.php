@@ -26,9 +26,6 @@ namespace rock\db\common;
  * $query = new Query;
  * $provider = new ArrayDataProvider([
  *     'allModels' => $query->from('post')->all(),
- *     'sort' => [
- *         'attributes' => ['id', 'username', 'email'],
- *     ],
  *     'pagination' => [
  *         'limit' => 20,
  *         'sort' => SORT_DESC,
