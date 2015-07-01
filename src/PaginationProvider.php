@@ -236,7 +236,7 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
     public function getCountMore($recalculate = false)
     {
         $this->calculate($recalculate);
-        return isset($this->data['pageCount']) ? $this->data['pageCount'] : null;
+        return isset($this->data['countMore']) ? $this->data['countMore'] : null;
     }
 
     /**
