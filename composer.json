@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "romeoz/rock-components" : "*@dev"
+        "romeoz/rock-components" : "0.11.*"
     },
     "autoload": {
         "psr-4": {
