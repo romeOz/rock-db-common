@@ -287,10 +287,10 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
         $page = (int)$page;
         $this->urlBuilder->addArgs([$this->pageArg => $page]);
         if ($absolute) {
-            return $this->urlBuilder->getAbsoluteUrl();
+            return $this->urlBuilder->getAbsolute();
         }
 
-        return $this->urlBuilder->getRelativeUrl();
+        return $this->urlBuilder->getRelative();
     }
 
     /**
