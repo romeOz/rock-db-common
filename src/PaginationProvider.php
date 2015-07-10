@@ -79,14 +79,8 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
 
     public function init()
     {
-        $this->request = Instance::ensure($this->request, '\rock\request\Request', false);
-        if (!$this->urlBuilder instanceof Url) {
-            if (class_exists('\rock\di\Container')) {
-                $this->urlBuilder =  \rock\di\Container::load($this->urlBuilder);
-            } elseif(class_exists('\rock\url\Url')) {
-                $this->urlBuilder = new Url(null, is_array($this->urlBuilder) ? $this->urlBuilder : []);
-            }
-        }
+        $this->request = Instance::ensure($this->request, '\rock\request\Request', [], false);
+        $this->urlBuilder = Instance::ensure($this->urlBuilder, '\rock\url\Url', [], false);
     }
 
     /**
@@ -106,7 +100,7 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
     public function getPage($recalculate = false)
     {
         if ($this->page === null || $recalculate) {
-            if (isset($this->request) && class_exists('\rock\rock\Sanitize')) {
+            if ($this->request instanceof \rock\request\Request && class_exists('\rock\rock\Sanitize')) {
                 $page = Request::get($this->pageArg, 0, Sanitize::positive()->int());
             } else {
                 $page = isset($_GET[$this->pageArg]) ? (int)$_GET[$this->pageArg] : 0;
@@ -307,10 +301,10 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
         }
         $this->calculate();
         return [
-            Link::REL_SELF => $this->createUrl($this->getPage(),$absolute),
+            Link::REL_SELF => $this->createUrl($this->getPage(), $absolute),
             self::LINK_FIRST => $this->createUrl($this->getPageFirst(), $absolute),
-            self::LINK_PREV =>$this->createUrl($this->getPagePrev(), $absolute),
-            self::LINK_NEXT =>$this->createUrl($this->getPageNext(),$absolute),
+            self::LINK_PREV => $this->createUrl($this->getPagePrev(), $absolute),
+            self::LINK_NEXT => $this->createUrl($this->getPageNext(), $absolute),
             self::LINK_LAST => $this->createUrl($this->getPageLast(), $absolute),
         ];
     }

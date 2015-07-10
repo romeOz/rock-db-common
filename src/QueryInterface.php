@@ -158,7 +158,7 @@ interface QueryInterface extends ComponentsInterface
 
     /**
      * Adds an additional WHERE condition to the existing one.
-     * 
+     *
      * The new condition and the existing one will be joined using the 'AND' operator.
      * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
@@ -170,7 +170,7 @@ interface QueryInterface extends ComponentsInterface
 
     /**
      * Adds an additional WHERE condition to the existing one.
-     * 
+     *
      * The new condition and the existing one will be joined using the 'OR' operator.
      * @param string|array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.
@@ -193,7 +193,7 @@ interface QueryInterface extends ComponentsInterface
 
     /**
      * Adds an additional WHERE condition to the existing one ignoring empty parameters.
-     * 
+     *
      * The new condition and the existing one will be joined using the 'AND' operator.
      * @param array $condition the new WHERE condition. Please refer to {@see \rock\db\common\QueryInterface::where()}
      * on how to specify this parameter.

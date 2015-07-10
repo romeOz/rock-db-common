@@ -139,7 +139,7 @@ class ActiveDataProvider extends BaseDataProvider
                 }
             }
         }
-        return $keys ? : array_keys($models);
+        return $keys ?: array_keys($models);
     }
 
     /**
@@ -152,6 +152,6 @@ class ActiveDataProvider extends BaseDataProvider
         }
         $query = clone $this->query;
         $query->refresh($this->connection); // when use with-relation
-        return (int) $query->limit(-1)->offset(-1)->orderBy([])->count('*', $this->connection);
+        return (int)$query->limit(-1)->offset(-1)->orderBy([])->count('*', $this->connection);
     }
 }

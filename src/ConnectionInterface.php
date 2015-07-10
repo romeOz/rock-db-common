@@ -12,13 +12,14 @@ namespace rock\db\common;
  * @property bool $autoClearCache
  * @property bool $typeCast
  */
-interface ConnectionInterface 
+interface ConnectionInterface
 {
     /**
      * Returns a value indicating whether the DB connection is established.
      * @return boolean whether the DB connection is established
      */
     public function getIsActive();
+
     /**
      * Establishes a DB connection.
      * It does nothing if a DB connection has already been established.

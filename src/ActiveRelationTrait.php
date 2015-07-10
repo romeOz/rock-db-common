@@ -255,7 +255,7 @@ trait ActiveRelationTrait
                         if (isset($buckets[$key])) {
                             if ($this->indexBy !== null) {
                                 // if indexBy is set, array_merge will cause renumbering of numeric array
-                                foreach($buckets[$key] as $bucketKey => $bucketValue) {
+                                foreach ($buckets[$key] as $bucketKey => $bucketValue) {
                                     $value[$bucketKey] = $bucketValue;
                                 }
                             } else {

@@ -3,7 +3,6 @@
 namespace rock\db\common;
 
 
-
 /**
  * ArrayDataProvider implements a data provider based on a data array.
  *
