@@ -11,7 +11,6 @@ use rock\helpers\Link;
 use rock\helpers\Pagination;
 use rock\request\Request;
 use rock\sanitize\Sanitize;
-use rock\url\Url;
 
 /**
  * @property-read int $pageCount total count pages
@@ -43,6 +42,11 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
      */
     public $pageParam = 'page';
     /**
+     * @var string name of the parameter storing the limit items.
+     * @see params
+     */
+    public $limitParam = 'limit';
+    /**
      * Current page.
      * @var int
      */
@@ -55,7 +59,17 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
      * Items limit.
      * @var int
      */
-    public $limit = Pagination::LIMIT;
+    public $limit;
+    /**
+     * Max items.
+     * @var int
+     */
+    public $maxLimit = 30;
+    /**
+     * Default items limit.
+     * @var int
+     */
+    public $defaultLimit = Pagination::LIMIT;
     /**
      * Sorting pages.
      * @var int
@@ -112,6 +126,30 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
         }
 
         return $this->page;
+    }
+
+    /**
+     * Returns items limit.
+     * @param bool $recalculate
+     * @return int
+     */
+    public function getLimit($recalculate = false)
+    {
+        if ($this->limit === null || $recalculate) {
+            if ($this->request instanceof \rock\request\Request && class_exists('\rock\rock\Sanitize')) {
+                $this->limit = Request::get($this->limitParam, $this->defaultLimit, Sanitize::positive()->int());
+            } else {
+                $this->limit = isset($_GET[$this->limitParam]) ? (int)$_GET[$this->limitParam] : $this->defaultLimit;
+                if ($this->limit < 0) {
+                    $this->limit = $this->defaultLimit;
+                }
+            }
+            if ($this->limit > $this->maxLimit) {
+                $this->limit = $this->maxLimit;
+            }
+        }
+
+        return $this->limit;
     }
 
     /**
@@ -234,17 +272,6 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
     }
 
     /**
-     * Returns limit.
-     * @param bool $recalculate
-     * @return int
-     */
-    public function getLimit($recalculate = false)
-    {
-        $this->calculate($recalculate);
-        return $this->limit;
-    }
-
-    /**
      * Returns offset.
      * @param bool $recalculate
      * @return int|null
@@ -341,7 +368,7 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
             $this->data = Pagination::get(
                 $this->totalCount,
                 $this->getPage(),
-                $this->limit,
+                $this->getLimit(),
                 $this->sort,
                 $this->pageLimit
             );
