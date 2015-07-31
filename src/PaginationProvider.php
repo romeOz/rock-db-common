@@ -41,7 +41,7 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
     /**
      * @var string name of the argument storing the current page index.
      */
-    public $pageArg = 'page';
+    public $pageParam = 'page';
     /**
      * Current page.
      * @var int
@@ -101,9 +101,9 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
     {
         if ($this->page === null || $recalculate) {
             if ($this->request instanceof \rock\request\Request && class_exists('\rock\rock\Sanitize')) {
-                $page = Request::get($this->pageArg, 0, Sanitize::positive()->int());
+                $page = Request::get($this->pageParam, 0, Sanitize::positive()->int());
             } else {
-                $page = isset($_GET[$this->pageArg]) ? (int)$_GET[$this->pageArg] : 0;
+                $page = isset($_GET[$this->pageParam]) ? (int)$_GET[$this->pageParam] : 0;
                 if ($page < 0) {
                     $page = 0;
                 }
@@ -279,7 +279,7 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
             return '';
         }
         $page = (int)$page;
-        $this->urlBuilder->addArgs([$this->pageArg => $page]);
+        $this->urlBuilder->addArgs([$this->pageParam => $page]);
         if ($absolute) {
             return $this->urlBuilder->getAbsolute();
         }
