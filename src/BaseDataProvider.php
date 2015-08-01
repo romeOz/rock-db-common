@@ -24,6 +24,7 @@ abstract class BaseDataProvider implements ObjectInterface, DataProviderInterfac
 {
     use ObjectTrait;
 
+    private $_sort;
     private $_pagination;
     private $_keys;
     private $_models;
@@ -185,6 +186,41 @@ abstract class BaseDataProvider implements ObjectInterface, DataProviderInterfac
         }
     }
 
+    /**
+     * @return Sort|boolean the sorting object. If this is false, it means the sorting is disabled.
+     */
+    public function getSort()
+    {
+        if ($this->_sort === null) {
+            $this->setSort([]);
+        }
+
+        return $this->_sort;
+    }
+
+    /**
+     * Sets the sort definition for this data provider.
+     * @param array|Sort|boolean $value the sort definition to be used by this data provider.
+     * This can be one of the following:
+     *
+     * - a configuration array for creating the sort definition object. The "class" element defaults
+     *   to 'rock\db\common\Sort'
+     * - an instance of {@see \rock\db\common\Sort} or its subclass
+     * - false, if sorting needs to be disabled.
+     *
+     * @throws DbException
+     */
+    public function setSort($value)
+    {
+        if (is_array($value)) {
+            $config = ['class' => Sort::className()];
+            $this->_sort = Instance::ensure(array_merge($config, $value));
+        } elseif ($value instanceof Sort || $value === false) {
+            $this->_sort = $value;
+        } else {
+            throw new DbException('Only Sort instance, configuration array or false is allowed.');
+        }
+    }
 
     /**
      * Refreshes the data provider.

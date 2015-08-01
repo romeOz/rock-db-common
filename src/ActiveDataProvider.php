@@ -97,6 +97,10 @@ class ActiveDataProvider extends BaseDataProvider
             $query->limit($pagination->limit)->offset($pagination->offset);
         }
 
+        if (($sort = $this->getSort()) !== false) {
+            $query->addOrderBy($sort->getOrders());
+        }
+
         return $query->all($this->connection);
     }
 
