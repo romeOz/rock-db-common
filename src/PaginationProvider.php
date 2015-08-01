@@ -136,7 +136,7 @@ class PaginationProvider implements ObjectInterface, \ArrayAccess, Linkable
     public function getLimit($recalculate = false)
     {
         if ($this->limit === null || $recalculate) {
-            if ($this->request instanceof \rock\request\Request && class_exists('\rock\rock\Sanitize')) {
+            if ($this->request instanceof \rock\request\Request) {
                 $this->limit = Request::get($this->limitParam, $this->defaultLimit, Sanitize::positive()->int());
             } else {
                 $this->limit = isset($_GET[$this->limitParam]) ? (int)$_GET[$this->limitParam] : $this->defaultLimit;
