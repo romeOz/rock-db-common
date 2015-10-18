@@ -1,6 +1,6 @@
 {
   "name": "romeoz/rock-db-common",
-  "description": "Common Library for Rock DB and Rock MongoDB.",
+  "description": "[READ ONLY] Common Library for Rock DB and Rock MongoDB.",
   "keywords": [
     "common",
     "database"
