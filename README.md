@@ -3,7 +3,7 @@ Common Library for [Rock DB](https://github.com/romeOz/rock-db) and [Rock MongoD
 
 Requirements
 -------------------
- * PHP 5.4+
+ * **PHP 5.4+**
 
 License
 -------------------
