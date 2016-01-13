@@ -1151,7 +1151,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
             $relation = $this->$getter();
         } catch (\Exception $e) {
             if ($throwException) {
-                throw new DbException(get_class($this) . ' has no relation named "' . $name . '".', [], $e);
+                throw new DbException(get_class($this) . ' has no relation named "' . $name . '".', [], 0, $e);
             } else {
                 return null;
             }
